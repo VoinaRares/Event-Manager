@@ -1,0 +1,78 @@
+<section class="signup-wrapper">
+  <header class="signup-header">
+    <h1>Create your organizer account</h1>
+    <p>Manage your events and invitations in one place.</p>
+  </header>
+
+  <form
+    class="signup-form"
+    [formGroup]="form"
+    (ngSubmit)="onSubmit()"
+    novalidate
+    (input)="resetStatus()"
+  >
+    <div class="form-field">
+      <label for="email">Email address</label>
+      <input
+        id="email"
+        type="email"
+        formControlName="email"
+        placeholder="you@example.com"
+        autocomplete="email"
+        required
+        [class.invalid]="form.controls.email.invalid && form.controls.email.touched"
+      />
+      <p class="field-error" *ngIf="form.controls.email.errors && form.controls.email.touched">
+        <span *ngIf="form.controls.email.errors['required']">Email is required.</span>
+        <span *ngIf="form.controls.email.errors['email']">Enter a valid email.</span>
+      </p>
+    </div>
+
+    <div class="form-field">
+      <label for="password">Password</label>
+      <input
+        id="password"
+        type="password"
+        formControlName="password"
+        placeholder="At least 8 characters"
+        autocomplete="new-password"
+        required
+        [class.invalid]="form.controls.password.invalid && form.controls.password.touched"
+      />
+      <p class="field-error" *ngIf="form.controls.password.errors && form.controls.password.touched">
+        <span *ngIf="form.controls.password.errors['required']">Password is required.</span>
+        <span *ngIf="form.controls.password.errors['minlength']">
+          Password must be at least 8 characters.
+        </span>
+      </p>
+    </div>
+
+    <div class="form-field">
+      <label for="confirmPassword">Confirm password</label>
+      <input
+        id="confirmPassword"
+        type="password"
+        formControlName="confirmPassword"
+        placeholder="Repeat your password"
+        autocomplete="new-password"
+        required
+        [class.invalid]="(form.controls.confirmPassword.invalid || passwordMismatch()) && form.controls.confirmPassword.touched"
+      />
+      <p class="field-error" *ngIf="form.controls.confirmPassword.errors && form.controls.confirmPassword.touched">
+        <span *ngIf="form.controls.confirmPassword.errors['required']">Confirmation is required.</span>
+      </p>
+      <p class="field-error" *ngIf="passwordMismatch()">Passwords do not match.</p>
+    </div>
+
+    <p class="form-feedback error" *ngIf="submissionError()">{{ submissionError() }}</p>
+    <p class="form-feedback success" *ngIf="submissionSuccess()">
+      Account created successfully. You can now log in with your email and password.
+    </p>
+
+    <button type="submit" [disabled]="isSubmitting()">
+      <span *ngIf="!isSubmitting()">Create account</span>
+      <span *ngIf="isSubmitting()">Creating...</span>
+    </button>
+  </form>
+</section>
+

@@ -1,3 +1,9 @@
 import { Routes } from '@angular/router';
 
-export const routes: Routes = [];
+import { SignupComponent } from './signup/signup.component';
+
+export const routes: Routes = [
+  { path: '', pathMatch: 'full', redirectTo: 'signup' },
+  { path: 'signup', component: SignupComponent },
+  { path: '**', redirectTo: 'signup' }
+];
