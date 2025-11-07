@@ -1,8 +1,8 @@
-package com.example.eventmanager.mapper;
+package com.example.event_manager.mapper;
 
-import com.example.eventmanager.domain.Organizer;
-import com.example.eventmanager.dto.OrganizerCreateDto;
-import com.example.eventmanager.dto.OrganizerResponseDto;
+import com.example.event_manager.model.Organizer;
+import com.example.event_manager.dto.OrganizerCreateDto;
+import com.example.event_manager.dto.OrganizerResponseDto;
 
 public class OrganizerMapper {
     public static Organizer toEntity(OrganizerCreateDto d, String passwordHash) {
@@ -10,6 +10,7 @@ public class OrganizerMapper {
         o.setName(d.getName());
         o.setEmail(d.getEmail());
         o.setPasswordHash(passwordHash);
+        o.setPhone(d.getPhone());
         return o;
     }
 

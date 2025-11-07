@@ -1,8 +1,8 @@
-package com.proiectcolectiv.eventmanager.controller;
+package com.example.event_manager.controller;
 
-import com.proiectcolectiv.eventmanager.dto.OrganizerCreateDto;
-import com.proiectcolectiv.eventmanager.dto.OrganizerResponseDto;
-import com.proiectcolectiv.eventmanager.service.OrganizerService;
+import com.example.event_manager.dto.OrganizerCreateDto;
+import com.example.event_manager.dto.OrganizerResponseDto;
+import com.example.event_manager.service.OrganizerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;

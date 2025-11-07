@@ -1,4 +1,4 @@
-package com.example.eventmanager.domain;
+package com.example.event_manager.model;
 
 public enum Role {
     USER,

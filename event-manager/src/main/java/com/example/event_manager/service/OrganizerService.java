@@ -1,14 +1,14 @@
-package com.proiectcolectiv.eventmanager.service;
+package com.example.event_manager.service;
 
-import com.proiectcolectiv.eventmanager.model.Organizer;
-import com.proiectcolectiv.eventmanager.dto.OrganizerCreateDto;
-import com.proiectcolectiv.eventmanager.dto.OrganizerResponseDto;
-import com.proiectcolectiv.eventmanager.mapper.OrganizerMapper;
-import com.proiectcolectiv.eventmanager.repository.OrganizerRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import com.example.event_manager.model.Organizer;
+import com.example.event_manager.dto.OrganizerCreateDto;
+import com.example.event_manager.dto.OrganizerResponseDto;
+import com.example.event_manager.mapper.OrganizerMapper;
+import com.example.event_manager.repository.OrganizerRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Service
 public class OrganizerService {
