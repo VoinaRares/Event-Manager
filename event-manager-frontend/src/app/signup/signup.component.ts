@@ -2,6 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { AbstractControl, FormBuilder, ValidationErrors, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
+import {CommonModule} from '@angular/common'
 
 import { SignupPayload, UserService } from '../api/user.service';
 
@@ -14,7 +15,7 @@ function passwordsMatch(control: AbstractControl): ValidationErrors | null {
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css'
 })
