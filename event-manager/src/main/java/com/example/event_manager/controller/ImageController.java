@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.event_manager.model.Image;
 import com.example.event_manager.repository.ImageRepository;
 
-
 @RestController
 @RequestMapping("/api/images")
 public class ImageController {
