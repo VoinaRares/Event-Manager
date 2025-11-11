@@ -1,6 +1,10 @@
 package com.example.event_manager.model;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "events")
@@ -22,6 +26,20 @@ public class Event {
     private Double longitude;
     private Double latitude;
     private Long placeId;
+
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> photos = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+        name = "event_organizers",
+        joinColumns = @JoinColumn(name = "event_id"),
+        inverseJoinColumns = @JoinColumn(name = "organizer_id")
+    )
+    private Set<Organizer> organizers = new HashSet<>();
+
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<EventParticipant> participants = new HashSet<>();
 
     public Event() {}
 
@@ -84,5 +102,43 @@ public class Event {
 
     public void setPlaceId(Long placeId) {
         this.placeId = placeId;
+    }
+
+    public List<Image> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<Image> photos) {
+        this.photos = photos;
+    }
+
+    public Set<Organizer> getOrganizers() {
+        return organizers;
+    }
+
+    public void setOrganizers(Set<Organizer> organizers) {
+        if (organizers.size() != 2) {
+            throw new IllegalArgumentException("An event must have exactly 2 organizers");
+        }
+        this.organizers = organizers;
+    }
+
+    public Set<EventParticipant> getParticipants() {
+        return participants;
+    }
+
+    public void addOrganizer(Organizer organizer) {
+        if (organizers.size() >= 2) {
+            throw new IllegalArgumentException("An event cannot have more than 2 organizers");
+        }
+        organizers.add(organizer);
+    }
+
+    public void addParticipant(EventParticipant participant) {
+        participants.add(participant);
+    }
+
+    public void removeParticipant(EventParticipant participant) {
+        participants.remove(participant);
     }
 }

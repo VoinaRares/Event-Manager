@@ -32,6 +32,16 @@ public class OrganizerService {
         return OrganizerMapper.toDto(saved);
     }
 
+    // Create or return existing Organizer entity for use when creating events
+    public Organizer findOrCreateEntity(OrganizerCreateDto dto) {
+        return organizerRepository.findByEmail(dto.getEmail())
+                .orElseGet(() -> {
+                    String hash = passwordEncoder.encode(dto.getPassword());
+                    Organizer organizer = OrganizerMapper.toEntity(dto, hash);
+                    return organizerRepository.save(organizer);
+                });
+    }
+
     public List<OrganizerResponseDto> listAll() {
         return organizerRepository.findAll().stream()
                 .map(OrganizerMapper::toDto)
