@@ -27,6 +27,9 @@ public class Event {
     private Double latitude;
     private Long placeId;
 
+    @Column(name = "location_name")
+    private String locationName;
+
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> photos = new ArrayList<>();
 
@@ -102,6 +105,14 @@ public class Event {
 
     public void setPlaceId(Long placeId) {
         this.placeId = placeId;
+    }
+
+    public String getLocationName() {
+        return locationName;
+    }
+
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
     }
 
     public List<Image> getPhotos() {

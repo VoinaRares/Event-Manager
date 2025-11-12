@@ -15,6 +15,7 @@ public class EventMapper {
         dto.setLongitude(e.getLongitude());
         dto.setLatitude(e.getLatitude());
         dto.setPlaceId(e.getPlaceId());
+        dto.setLocationName(e.getLocationName());
 
         if (e.getOrganizers() != null) {
             dto.setOrganizers(e.getOrganizers().stream()

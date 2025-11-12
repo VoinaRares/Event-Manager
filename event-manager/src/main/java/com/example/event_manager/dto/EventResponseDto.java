@@ -10,6 +10,7 @@ public class EventResponseDto {
     private Double longitude;
     private Double latitude;
     private Long placeId;
+    private String locationName;
     private List<OrganizerResponseDto> organizers;
     private List<EventParticipantDto> participants;
 
@@ -35,6 +36,9 @@ public class EventResponseDto {
 
     public Long getPlaceId() { return placeId; }
     public void setPlaceId(Long placeId) { this.placeId = placeId; }
+
+    public String getLocationName() { return locationName; }
+    public void setLocationName(String locationName) { this.locationName = locationName; }
 
     public List<OrganizerResponseDto> getOrganizers() { return organizers; }
     public void setOrganizers(List<OrganizerResponseDto> organizers) { this.organizers = organizers; }

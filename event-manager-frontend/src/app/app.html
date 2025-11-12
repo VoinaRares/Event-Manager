@@ -1,1 +1,11 @@
-<router-outlet></router-outlet>
+<header class="app-header">
+  <div class="brand">Event Manager</div>
+  <nav>
+    <a routerLink="/signup" routerLinkActive="active-link">Sign up</a>
+    <a routerLink="/admin" routerLinkActive="active-link">Admin home</a>
+  </nav>
+</header>
+
+<main class="app-main">
+  <router-outlet></router-outlet>
+</main>
