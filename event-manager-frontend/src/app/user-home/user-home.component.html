@@ -1,0 +1,63 @@
+<div class="user-home">
+  <main class="main">
+    <h1 class="page-title">Your Events</h1>
+
+    <p *ngIf="loading" class="info">Loading events...</p>
+    <p *ngIf="!loading && error" class="error">{{ error }}</p>
+
+    <div *ngIf="!loading && !error" class="sections">
+      <section class="section">
+        <h2 class="section-title">Pending Invitations</h2>
+
+        <p *ngIf="pendingEvents.length === 0" class="info">
+          You have no pending invitations.
+        </p>
+
+        <div class="event-card" *ngFor="let event of pendingEvents">
+          <h3 class="event-title">{{ event.name }}</h3>
+          <p class="event-row">
+            <span class="label">Start:</span>
+            <span>{{ event.startDate }}</span>
+          </p>
+          <p class="event-row">
+            <span class="label">End:</span>
+            <span>{{ event.endDate }}</span>
+          </p>
+          <p class="event-row">
+            <span class="label">Location:</span>
+            <span>{{ event.placeId }}</span>
+          </p>
+
+          <div class="actions">
+            <button class="btn btn-outline">Decline</button>
+            <button class="btn btn-primary">Accept</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">Confirmed Events</h2>
+
+        <p *ngIf="confirmedEvents.length === 0" class="info">
+          You have no confirmed events yet.
+        </p>
+
+        <div class="event-card confirmed" *ngFor="let event of confirmedEvents">
+          <h3 class="event-title">{{ event.name }}</h3>
+          <p class="event-row">
+            <span class="label">Start:</span>
+            <span>{{ event.startDate }}</span>
+          </p>
+          <p class="event-row">
+            <span class="label">End:</span>
+            <span>{{ event.endDate }}</span>
+          </p>
+          <p class="event-row">
+            <span class="label">Location:</span>
+            <span>{{ event.placeId }}</span>
+          </p>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
