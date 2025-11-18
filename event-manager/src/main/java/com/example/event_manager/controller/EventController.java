@@ -8,20 +8,25 @@ import com.example.event_manager.repository.UserRepository;
 import com.example.event_manager.dto.EventCreateDto;
 import com.example.event_manager.dto.EventResponseDto;
 import com.example.event_manager.mapper.EventMapper;
-import java.util.stream.Collectors;
 import com.example.event_manager.service.EventParticipantService;
 import com.example.event_manager.service.OrganizerService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/events")
+@CrossOrigin(origins = "http://localhost:4200")
 public class EventController {
 
     private final EventRepository eventRepository;
@@ -50,11 +55,19 @@ public class EventController {
         if (dto.getOrganizers() == null || dto.getOrganizers().size() != 2) {
             return ResponseEntity.badRequest().body("Event must have exactly 2 organizers");
         }
-    Set<Organizer> organizers = dto.getOrganizers().stream()
-        .map(organizerDto -> organizerService.findOrCreateEntity(organizerDto))
-        .collect(Collectors.toSet());
 
-        Event event = new Event(dto.getName(), dto.getStartDate(), dto.getEndDate(), dto.getLongitude(), dto.getLatitude(), dto.getPlaceId());
+        Set<Organizer> organizers = dto.getOrganizers().stream()
+                .map(organizerDto -> organizerService.findOrCreateEntity(organizerDto))
+                .collect(Collectors.toSet());
+
+        Event event = new Event(
+                dto.getName(),
+                dto.getStartDate(),
+                dto.getEndDate(),
+                dto.getLongitude(),
+                dto.getLatitude(),
+                dto.getPlaceId()
+        );
         event.setOrganizers(organizers);
 
         Event saved = eventRepository.save(event);
