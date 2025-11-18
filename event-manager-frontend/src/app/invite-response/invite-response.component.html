@@ -1,0 +1,41 @@
+<section class="invite-wrapper">
+  <header class="invite-header">
+    <h1>Event Invitation</h1>
+    <p *ngIf="!loading() && event()">You're invited to:</p>
+  </header>
+
+  <div *ngIf="loading()" class="loading">Loading event…</div>
+
+  <div *ngIf="error()" class="error">{{ error() }}</div>
+
+  <div *ngIf="!loading() && event()" class="invite-card">
+    <h2 class="event-name">{{ event()!.name }}</h2>
+    <p class="event-dates">
+      <strong>Starts:</strong> {{ event()!.startDate }}<br />
+      <strong>Ends:</strong> {{ event()!.endDate }}
+    </p>
+
+    <p class="response-note">Can you attend?</p>
+
+    <div *ngIf="invitedParticipant(); else notInvited">
+      <div class="participant-info">
+        <p *ngIf="invitedParticipant()?.responded">You already responded.</p>
+      </div>
+
+      <div class="actions">
+        <button class="accept" (click)="accept()" [disabled]="processing()"> 
+          {{ processing() ? 'Processing…' : 'Accept' }}
+        </button>
+        <button class="decline" (click)="decline()" [disabled]="processing()"> 
+          {{ processing() ? 'Processing…' : 'Decline' }}
+        </button>
+      </div>
+
+      <p class="action-message" *ngIf="actionMessage()">{{ actionMessage() }}</p>
+    </div>
+
+    <ng-template #notInvited>
+      <p class="no-invite">We could not find an invitation for you to this event.</p>
+    </ng-template>
+  </div>
+</section>

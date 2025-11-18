@@ -84,15 +84,15 @@ public class EventController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{eventId}/accept/{userId}")
-    public ResponseEntity<?> acceptInvitation(@PathVariable Long eventId, @PathVariable Integer userId) {
-        participantService.acceptInvitation(eventId, userId);
+    @PostMapping("/{eventId}/accept/{token}")
+    public ResponseEntity<?> acceptInvitation(@PathVariable Long eventId, @PathVariable String token) {
+        participantService.acceptInvitation(eventId, token);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{eventId}/reject/{userId}")
-    public ResponseEntity<?> rejectInvitation(@PathVariable Long eventId, @PathVariable Integer userId) {
-        participantService.rejectInvitation(eventId, userId);
+    @PostMapping("/{eventId}/reject/{token}")
+    public ResponseEntity<?> rejectInvitation(@PathVariable Long eventId, @PathVariable String token) {
+        participantService.rejectInvitation(eventId, token);
         return ResponseEntity.ok().build();
     }
 }

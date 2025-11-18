@@ -31,15 +31,26 @@ public class EventParticipant {
 
     private LocalDateTime responseAt;
 
+    @Column(name = "token", nullable = false, unique = true, length = 64)
+    private String token;
+
     public EventParticipant() {}
 
-    public EventParticipant(Event event, User user) {
+    public EventParticipant(Event event, User user, String token) {
         this.id = new EventParticipantId(event.getId(), user.getId());
         this.event = event;
         this.user = user;
         this.isComing = false;
         this.responded = false;
         this.invitationSentAt = LocalDateTime.now();
+        this.token = token;
+    }
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public EventParticipantId getId() {

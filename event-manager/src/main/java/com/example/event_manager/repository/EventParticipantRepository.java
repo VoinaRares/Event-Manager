@@ -12,4 +12,6 @@ import java.util.Optional;
 @Repository
 public interface EventParticipantRepository extends JpaRepository<EventParticipant, EventParticipantId> {
     Optional<EventParticipant> findByEventAndUser(Event event, User user);
+
+    Optional<EventParticipant> findByEventAndToken(Event event, String token);
 }

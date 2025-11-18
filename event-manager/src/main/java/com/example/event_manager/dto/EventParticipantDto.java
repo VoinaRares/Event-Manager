@@ -10,6 +10,7 @@ public class EventParticipantDto {
     private boolean responded;
     private LocalDateTime invitationSentAt;
     private LocalDateTime responseAt;
+    private String token;
 
     public EventParticipantDto() {}
 
@@ -33,4 +34,7 @@ public class EventParticipantDto {
 
     public LocalDateTime getResponseAt() { return responseAt; }
     public void setResponseAt(LocalDateTime responseAt) { this.responseAt = responseAt; }
+
+    public String getToken(){ return token; }
+    public void setToken(String token){ this.token = token; }
 }
