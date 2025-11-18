@@ -42,7 +42,7 @@ public class Event {
     private Set<Organizer> organizers = new HashSet<>();
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<EventParticipant> participants = new HashSet<>();
+    private final Set<EventParticipant> participants = new HashSet<>();
 
     public Event() {}
 

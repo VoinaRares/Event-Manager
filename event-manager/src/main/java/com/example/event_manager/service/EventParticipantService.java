@@ -17,7 +17,6 @@ public class EventParticipantService {
 
     private final EventParticipantRepository eventParticipantRepository;
     private final EventRepository eventRepository;
-    private final UserRepository userRepository;
     private final EmailService emailService;
 
     public EventParticipantService(
@@ -27,7 +26,6 @@ public class EventParticipantService {
             EmailService emailService) {
         this.eventParticipantRepository = eventParticipantRepository;
         this.eventRepository = eventRepository;
-        this.userRepository = userRepository;
         this.emailService = emailService;
     }
 
