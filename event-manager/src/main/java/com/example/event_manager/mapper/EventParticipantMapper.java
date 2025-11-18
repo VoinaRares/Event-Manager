@@ -17,6 +17,7 @@ public class EventParticipantMapper {
         dto.setResponded(p.isResponded());
         dto.setInvitationSentAt(p.getInvitationSentAt());
         dto.setResponseAt(p.getResponseAt());
+        dto.setToken(p.getToken());
         return dto;
     }
 }
