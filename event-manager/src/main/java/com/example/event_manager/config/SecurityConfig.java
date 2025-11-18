@@ -1,4 +1,4 @@
-package com.proiectcolectiv.eventmanager.config;
+package com.example.event_manager.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

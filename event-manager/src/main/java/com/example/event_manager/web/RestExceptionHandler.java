@@ -1,4 +1,4 @@
-package com.example.eventmanager.web;
+package com.example.event_manager.web;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
