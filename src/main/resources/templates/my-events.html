@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My Events</title>
+    <style>
+        table { margin: 20px auto; border-collapse: collapse; width: 80%; }
+        th, td { border: 1px solid #888; padding: 8px 12px; text-align: left; }
+        th { background: #e2e2e2; }
+        h2 { text-align: center; }
+        a { display: block; margin: 20px auto; text-align: center; }
+    </style>
+</head>
+<body>
+<h2>My Events</h2>
+<table>
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Location</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="event : ${events}">
+        <td th:text="${event.title}">Title</td>
+        <td th:text="${event.description}">Description</td>
+        <td th:text="${event.location}">Location</td>
+    </tr>
+    </tbody>
+</table>
+<a href="/profile">Back to Profile</a>
+</body>
+</html>
