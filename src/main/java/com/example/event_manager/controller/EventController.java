@@ -22,9 +22,9 @@ public class EventController {
     }
 
     @GetMapping
-    public String list(@RequestParam(required=false) String q, Model model) {
+    public String list(@RequestParam(required = false) String q, Model model) {
         if (q != null && !q.isEmpty()) {
-            model.addAttribute("events", eventRepo.findByTitleContainingIgnoreCase(q));
+            model.addAttribute("events", eventRepo.findByNameContainingIgnoreCase(q));
         } else {
             model.addAttribute("events", eventRepo.findAll());
         }
@@ -41,7 +41,7 @@ public class EventController {
     public String add(@ModelAttribute Event event, Authentication auth) {
         eventRepo.save(event);
         if (logRepo != null && auth != null)
-            logRepo.save(new AuditLog(auth.getName(), "created event", event.getTitle(), java.time.LocalDateTime.now()));
+            logRepo.save(new AuditLog(auth.getName(), "created event", event.getName(), java.time.LocalDateTime.now()));
         return "redirect:/admin/events";
     }
 
@@ -56,7 +56,7 @@ public class EventController {
         event.setId(id);
         eventRepo.save(event);
         if (logRepo != null && auth != null)
-            logRepo.save(new AuditLog(auth.getName(), "edited event", event.getTitle(), java.time.LocalDateTime.now()));
+            logRepo.save(new AuditLog(auth.getName(), "edited event", event.getName(), java.time.LocalDateTime.now()));
         return "redirect:/admin/events";
     }
 
@@ -66,7 +66,7 @@ public class EventController {
         if (e != null) {
             eventRepo.deleteById(id);
             if (logRepo != null && auth != null)
-                logRepo.save(new AuditLog(auth.getName(), "deleted event", e.getTitle(), java.time.LocalDateTime.now()));
+                logRepo.save(new AuditLog(auth.getName(), "deleted event", e.getName(), java.time.LocalDateTime.now()));
         }
         return "redirect:/admin/events";
     }

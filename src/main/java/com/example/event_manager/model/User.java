@@ -20,9 +20,10 @@ public class User {
     @Column(nullable = false)
     private Role role = Role.USER;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    // Change fetch type to EAGER
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "user_event",
+            name = "user_events",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "event_id")
     )

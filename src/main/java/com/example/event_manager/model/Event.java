@@ -1,48 +1,86 @@
 package com.example.event_manager.model;
 
-import com.example.event_manager.model.User;
-
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "events")  // Same table name
 public class Event {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
-    private String description;
-    private String location;
+    private String name;
 
-    // If you want: start and end date fields
-    // private String startDate;
-    // private String endDate;
+    @Column(name = "start_date")
+    private String startDate;
 
-    // Associate this event with its owner/creator:
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "end_date")
+    private String endDate;
+
+    private Double longitude;
+    private Double latitude;
+
+    @Column(name = "place_id")
+    private Integer placeId;
 
     public Event() {}
 
-    public Event(String title, String description, String location, User user) {
-        this.title = title;
-        this.description = description;
-        this.location = location;
-        this.user = user;
+    // Getters and Setters
+
+    public Long getId() {
+        return id;
     }
 
-    // Getters
-    public Long getId() { return id; }
-    public String getTitle() { return title; }
-    public String getDescription() { return description; }
-    public String getLocation() { return location; }
-    public User getUser() { return user; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    // Setters
-    public void setId(Long id) { this.id = id; }
-    public void setTitle(String title) { this.title = title; }
-    public void setDescription(String description) { this.description = description; }
-    public void setLocation(String location) { this.location = location; }
-    public void setUser(User user) { this.user = user; }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Integer getPlaceId() {
+        return placeId;
+    }
+
+    public void setPlaceId(Integer placeId) {
+        this.placeId = placeId;
+    }
 }

@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.security.Principal;
+import java.util.Optional;
 
 @Controller
 public class ProfileController {
@@ -18,15 +19,22 @@ public class ProfileController {
     @GetMapping("/user/dashboard")
     public String userDashboard(Model model, Principal principal) {
         String username = principal.getName();
-        User user = userRepository.findByUsername(username);
-        model.addAttribute("user", user);
-        return "profile";
-    }
 
-    @GetMapping("/user/events")
-    public String myEvents(Model model, Principal principal) {
-        User user = userRepository.findByUsername(principal.getName());
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        Optional<User> userWithEventsOpt = userRepository.findByIdWithEvents(user.getId());
+        if (userWithEventsOpt.isEmpty()) {
+            return "redirect:/login";
+        }
+
+        user = userWithEventsOpt.get();
+
+        model.addAttribute("user", user);
         model.addAttribute("events", user.getEvents());
-        return "my-events";
+
+        return "user-dashboard";
     }
 }
