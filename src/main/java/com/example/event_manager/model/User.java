@@ -20,7 +20,6 @@ public class User {
     @Column(nullable = false)
     private Role role = Role.USER;
 
-    // --- NEW: Many-to-many relationship with Event ---
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_event",
@@ -35,6 +34,7 @@ public class User {
         this.username = username;
         this.password = password;
         this.role = role;
+        this.events = new HashSet<>();
     }
 
     // Getters
@@ -42,12 +42,17 @@ public class User {
     public String getUsername() { return username; }
     public String getPassword() { return password; }
     public Role getRole() { return role; }
-    public Set<Event> getEvents() { return events; } // --- Added for Thymeleaf! ---
+    public Set<Event> getEvents() { return events; }
 
     // Setters
     public void setId(Long id) { this.id = id; }
     public void setUsername(String username) { this.username = username; }
     public void setPassword(String password) { this.password = password; }
     public void setRole(Role role) { this.role = role; }
-    public void setEvents(Set<Event> events) { this.events = events; } // --- Added for Thymeleaf! ---
+    public void setEvents(Set<Event> events) { this.events = events; }
+
+    // Helper: Add a single event
+    public void addEvent(Event event) {
+        this.events.add(event);
+    }
 }
