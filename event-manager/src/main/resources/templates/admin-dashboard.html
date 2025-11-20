@@ -6,10 +6,16 @@
 </head>
 <body class="bg-light">
 <div class="container mt-5">
-    <h2>Welcome Admin!</h2>
-    <a th:href="@{/admin/events}" class="btn btn-info mt-3">Manage Events</a>
-    <a th:href="@{/admin/users}" class="btn btn-secondary mt-3">Manage Users</a>
-    <a th:href="@{/logout}" class="btn btn-outline-danger mt-3">Logout</a>
+    <h2 class="mb-4">Welcome Admin!</h2>
+    <div class="d-flex flex-row gap-3 mb-3">
+        <a th:href="@{/admin/events}" class="btn btn-info">Manage Events</a>
+        <a th:href="@{/admin/users}" class="btn btn-secondary">Manage Users</a>
+        <a th:href="@{/admin/change-password}" class="btn btn-warning">Change Password</a>
+        <form th:action="@{/logout}" method="post" style="display:inline;">
+            <button type="submit" class="btn btn-outline-danger">Logout</button>
+        </form>
+
+    </div>
 </div>
 </body>
 </html>
