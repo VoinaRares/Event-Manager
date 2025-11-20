@@ -1,6 +1,7 @@
 package com.example.event_manager.model;
 
 import jakarta.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -15,18 +16,18 @@ public class User {
     private String username;
 
     @Column(nullable = false)
-    private String password; // Store hashed password
+    private String password; // Store hashed password with bcrypt
 
     @Column(nullable = false)
     private String role; // Should be "USER" or "ADMIN"
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_events",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "event_id")
     )
-    private Set<Event> events;
+    private Set<Event> events = new HashSet<>();
 
     // Constructors
     public User() {}
@@ -52,4 +53,14 @@ public class User {
 
     public Set<Event> getEvents() { return events; }
     public void setEvents(Set<Event> events) { this.events = events; }
+
+    // toString, without password or events!
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", role='" + role + '\'' +
+                '}';
+    }
 }

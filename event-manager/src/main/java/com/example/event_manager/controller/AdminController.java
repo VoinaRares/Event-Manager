@@ -29,27 +29,23 @@ public class AdminController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // --------------- DASHBOARD ----------------
     @GetMapping("/dashboard")
     public String adminDashboard() {
         return "admin-dashboard";
     }
 
-    // --------------- USER LIST ----------------
     @GetMapping("/users")
     public String listUsers(Model model) {
         model.addAttribute("users", userRepository.findAll());
         return "admin-users";
     }
 
-    // ------------- CREATE USER FORM -----------
     @GetMapping("/users/new")
     public String showCreateUserForm(Model model) {
         model.addAttribute("user", new User());
         return "user-create-form";
     }
 
-    // ------------- CREATE USER HANDLER ----------
     @PostMapping("/users/save")
     public String saveNewUser(@ModelAttribute User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -57,7 +53,6 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 
-    // ------------- EDIT USER FORM --------------
     @GetMapping("/users/edit/{id}")
     public String showEditUserForm(@PathVariable Long id, Model model) {
         User user = userRepository.findById(id).orElse(null);
@@ -66,21 +61,33 @@ public class AdminController {
         return "user-form";
     }
 
-    // ------------- UPDATE USER HANDLER --------------
+    // ----------- UPDATED FOR PASSWORD CHANGE -----------
     @PostMapping("/users/update")
-    public String updateUser(@ModelAttribute User user) {
+    public String updateUser(@ModelAttribute User formUser,
+                             @RequestParam(value = "newPassword", required = false) String newPassword) {
+        User user = userRepository.findById(formUser.getId())
+                .orElseThrow();
+
+        // Update core fields
+        user.setUsername(formUser.getUsername());
+        user.setRole(formUser.getRole());
+        // add other fields if needed
+
+        // Update password only if non-blank
+        if (newPassword != null && !newPassword.trim().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(newPassword));
+        }
+
         userRepository.save(user);
         return "redirect:/admin/users";
     }
 
-    // ------------- DELETE USER (POST with CSRF) -------------
     @PostMapping("/users/delete/{id}")
     public String deleteUser(@PathVariable Long id) {
         userRepository.deleteById(id);
         return "redirect:/admin/users";
     }
 
-    // ------------- USER PROFILE ---------------
     @GetMapping("/users/profile/{id}")
     public String showUserProfile(@PathVariable Long id, Model model) {
         User user = userRepository.findById(id).orElse(null);
@@ -90,7 +97,6 @@ public class AdminController {
         return "user-profile";
     }
 
-    // ------------- ASSIGN EVENTS FORM ----------
     @GetMapping("/users/assign-events/{id}")
     public String showAssignEventsForm(@PathVariable Long id, Model model) {
         User user = userRepository.findById(id).orElse(null);
@@ -100,7 +106,6 @@ public class AdminController {
         return "assign-events";
     }
 
-    // ------- ASSIGN EVENTS (POST: Save assignments) -------
     @PostMapping("/users/assign-events")
     public String assignEventsToUser(@RequestParam Long userId,
                                      @RequestParam(required = false) Set<Long> eventIds) {
@@ -118,13 +123,11 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 
-    // ----------- CHANGE PASSWORD (GET) -------------------
     @GetMapping("/change-password")
     public String showChangePasswordForm() {
         return "change-password";
     }
 
-    // ----------- CHANGE PASSWORD (POST) -----------------
     @PostMapping("/change-password")
     public String changePassword(@RequestParam String oldPassword,
                                  @RequestParam String newPassword,

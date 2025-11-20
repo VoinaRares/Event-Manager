@@ -7,17 +7,26 @@
 <body class="bg-light">
 <div class="container mt-4">
     <h2>Edit User</h2>
+
     <form th:action="@{/admin/users/update}" th:object="${user}" method="post">
         <input type="hidden" th:field="*{id}"/>
+
         <div class="mb-3">
             <label>Username:</label>
             <input type="text" th:field="*{username}" class="form-control" required/>
         </div>
-        <!-- Optional: password edit, handle carefully -->
+
         <div class="mb-3">
             <label>Role:</label>
             <input type="text" th:field="*{role}" class="form-control"/>
         </div>
+
+        <!-- New password field (optional) -->
+        <div class="mb-3">
+            <label>New Password (leave blank to keep current):</label>
+            <input type="password" name="newPassword" class="form-control"/>
+        </div>
+
         <button type="submit" class="btn btn-primary">Save Changes</button>
         <a th:href="@{/admin/users}" class="btn btn-secondary ms-2">Cancel</a>
     </form>
