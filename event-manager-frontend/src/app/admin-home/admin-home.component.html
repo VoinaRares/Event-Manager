@@ -1,0 +1,177 @@
+<section class="admin-home">
+<header class="admin-header">
+  <div>
+    <p class="eyebrow">Organizer dashboard</p>
+    <h1>Admin homepage</h1>
+    <p class="subtitle" *ngIf="dashboard() as data">
+      Monitoring {{ data.organizerName }} · {{ data.organizerEmail }}
+    </p>
+  </div>
+  <label class="organizer-select">
+    <span>Switch organizer</span>
+    <select [ngModel]="selectedOrganizerId()" (ngModelChange)="changeOrganizer($event)">
+      <option *ngFor="let organizer of organizers()" [value]="organizer.id">
+        {{ organizer.name }} ({{ organizer.email }})
+      </option>
+    </select>
+  </label>
+</header>
+
+<section class="create-event-card">
+  <header>
+    <div>
+      <h2>Create an event</h2>
+      <p>Fill in the essentials and pick a co-host.</p>
+    </div>
+    <button type="button" (click)="createEvent()" [disabled]="creatingEvent()">
+      {{ creatingEvent() ? 'Creating…' : 'Create event' }}
+    </button>
+  </header>
+
+  <div class="form-grid">
+    <label>
+      <span>Event name</span>
+      <input type="text" [(ngModel)]="eventDraft.name" name="eventName" placeholder="e.g. Ana & Victor Wedding" />
+    </label>
+    <label>
+      <span>Start date</span>
+      <input type="date" [(ngModel)]="eventDraft.startDate" name="startDate" />
+    </label>
+    <label>
+      <span>End date</span>
+      <input type="date" [(ngModel)]="eventDraft.endDate" name="endDate" />
+    </label>
+    <label class="wide">
+      <span>Location</span>
+      <input
+        type="text"
+        [(ngModel)]="eventDraft.locationName"
+        name="locationName"
+        placeholder="Venue name or address"
+      />
+    </label>
+    <label>
+      <span>Co-host organizer</span>
+      <select [(ngModel)]="eventDraft.coHostId" name="coHost">
+        <option value="">Select organizer</option>
+        <option *ngFor="let organizer of organizers()" [value]="organizer.id">
+          {{ organizer.name }}
+        </option>
+      </select>
+    </label>
+  </div>
+
+  <p class="form-feedback error" *ngIf="createError()">{{ createError() }}</p>
+  <p class="form-feedback success" *ngIf="createSuccess()">{{ createSuccess() }}</p>
+</section>
+
+<section *ngIf="loading()" class="state-card">Loading data…</section>
+<section *ngIf="error()" class="state-card error">{{ error() }}</section>
+
+<ng-container *ngIf="dashboard() as data">
+  <section class="stats-grid">
+      <article class="stat-card">
+        <p>Total events</p>
+        <strong>{{ data.stats.totalEvents }}</strong>
+      </article>
+      <article class="stat-card">
+        <p>Active</p>
+        <strong>{{ data.stats.activeEvents }}</strong>
+      </article>
+      <article class="stat-card">
+        <p>Upcoming</p>
+        <strong>{{ data.stats.upcomingEvents }}</strong>
+      </article>
+      <article class="stat-card">
+        <p>Completed</p>
+        <strong>{{ data.stats.pastEvents }}</strong>
+      </article>
+      <article class="stat-card">
+        <p>Invited guests</p>
+        <strong>{{ data.stats.invitedGuests }}</strong>
+      </article>
+      <article class="stat-card">
+        <p>Confirmed</p>
+        <strong>{{ data.stats.confirmedGuests }}</strong>
+      </article>
+      <article class="stat-card">
+        <p>Pending replies</p>
+        <strong>{{ data.stats.pendingGuests }}</strong>
+      </article>
+    </section>
+
+    <section class="events-section">
+      <header>
+        <h2>Events overview</h2>
+        <p>{{ data.events.length }} event(s)</p>
+      </header>
+
+      <article class="event-card empty" *ngIf="!data.events.length">
+        <p>No events found for this organizer.</p>
+      </article>
+
+      <article
+        class="event-card"
+        *ngFor="let event of data.events; trackBy: trackEvents"
+      >
+        <div class="event-card__header">
+          <div>
+            <h3>{{ event.name }}</h3>
+            <p>{{ event.startDate }} → {{ event.endDate }}</p>
+            <p class="event-card__location" *ngIf="event.locationName">
+              {{ event.locationName }}
+            </p>
+          </div>
+          <span class="status" [attr.data-status]="event.status">{{ event.status }}</span>
+        </div>
+        <button
+          class="event-card__delete"
+          type="button"
+          (click)="deleteEvent(event.eventId)"
+          [disabled]="deletingEventId() === event.eventId"
+        >
+          {{ deletingEventId() === event.eventId ? 'Deleting…' : 'Delete' }}
+        </button>
+        <div class="event-card__metrics">
+          <div>
+            <p>Invited</p>
+            <strong>{{ event.invitedGuests }}</strong>
+          </div>
+          <div>
+            <p>Confirmed</p>
+            <strong>{{ event.confirmedGuests }}</strong>
+          </div>
+          <div>
+            <p>Pending</p>
+            <strong>{{ event.pendingGuests }}</strong>
+          </div>
+          <div>
+            <p>Photos</p>
+            <strong>{{ event.photoCount }}</strong>
+          </div>
+        </div>
+        <div class="invite-row">
+          <input
+            type="email"
+            placeholder="guest@example.com"
+            [(ngModel)]="inviteDrafts[event.eventId]"
+            name="invite-{{ event.eventId }}"
+          />
+          <button
+            type="button"
+            (click)="sendInvitation(event.eventId)"
+            [disabled]="inviteState()[event.eventId]?.loading"
+          >
+            {{ inviteState()[event.eventId]?.loading ? 'Sending…' : 'Send invite' }}
+          </button>
+        </div>
+        <p class="invite-feedback success" *ngIf="inviteState()[event.eventId]?.success">
+          {{ inviteState()[event.eventId]?.success }}
+        </p>
+        <p class="invite-feedback error" *ngIf="inviteState()[event.eventId]?.error">
+          {{ inviteState()[event.eventId]?.error }}
+        </p>
+      </article>
+    </section>
+  </ng-container>
+</section>

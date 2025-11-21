@@ -1,0 +1,69 @@
+package com.example.event_manager.service;
+
+import com.example.event_manager.model.Event;
+import com.example.event_manager.model.EventParticipant;
+import com.example.event_manager.model.User;
+import com.example.event_manager.repository.EventParticipantRepository;
+import com.example.event_manager.repository.EventRepository;
+import com.example.event_manager.repository.UserRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import jakarta.persistence.EntityNotFoundException;
+import java.security.SecureRandom;
+import java.math.BigInteger;
+
+@Service
+public class EventParticipantService {
+
+    private final EventParticipantRepository eventParticipantRepository;
+    private final EventRepository eventRepository;
+    private final EmailService emailService;
+
+    public EventParticipantService(
+            EventParticipantRepository eventParticipantRepository,
+            EventRepository eventRepository,
+            UserRepository userRepository,
+            EmailService emailService) {
+        this.eventParticipantRepository = eventParticipantRepository;
+        this.eventRepository = eventRepository;
+        this.emailService = emailService;
+    }
+
+        private String generateToken() {
+                SecureRandom random = new SecureRandom();
+                return new BigInteger(256, random).toString(32);
+        }
+
+        @Transactional
+        public void inviteParticipant(Event event, User user) {
+                String token = generateToken();
+                EventParticipant participant = new EventParticipant(event, user, token);
+                eventParticipantRepository.save(participant);
+                event.addParticipant(participant);
+                eventRepository.save(event);
+                String link = "http://localhost:4200/invite/" + event.getId() + "/" + token;
+                String body = "You have been invited to the event: " + event.getName() +
+                        "\nClick this link to respond: " + link;
+                emailService.sendEmail(user.getEmail(), "You have been invited to the event!", body);
+        }
+
+    @Transactional
+    public void acceptInvitation(Long eventId, String token) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new EntityNotFoundException("Event not found with id: " + eventId));
+        EventParticipant participant = eventParticipantRepository.findByEventAndToken(event, token)
+                .orElseThrow(() -> new EntityNotFoundException("Invitation not found for token: " + token));
+        participant.setComing(true);
+        participant.setResponded(true);
+        eventParticipantRepository.save(participant);
+    }
+
+    @Transactional
+    public void rejectInvitation(Long eventId, String token) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new EntityNotFoundException("Event not found with id: " + eventId));
+        EventParticipant participant = eventParticipantRepository.findByEventAndToken(event, token)
+                .orElseThrow(() -> new EntityNotFoundException("Invitation not found for token: " + token));
+        eventParticipantRepository.delete(participant);
+    }
+}

@@ -1,0 +1,60 @@
+.invite-wrapper {
+  max-width: 680px;
+  margin: 1.5rem auto;
+  padding: 1.25rem;
+}
+
+.invite-header h1 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.25rem;
+}
+
+.invite-card {
+  border: 1px solid #e6eef8;
+  background: #ffffff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(12, 16, 23, 0.04);
+}
+
+.event-name {
+  margin: 0 0 0.25rem 0;
+}
+
+.event-dates {
+  color: #475569;
+  margin: 0 0 1rem 0;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.actions .accept {
+  background: #0ea5a4;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.actions .decline {
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.action-message {
+  margin-top: 1rem;
+  color: #0f172a;
+  font-weight: 500;
+}
+
+.loading { color: #475569; }
+.error { color: #dc2626; }

@@ -15,10 +15,15 @@ export interface User {
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://localhost:8080/api/users';
+
+  private readonly usersUrl = 'http://localhost:8080/api/users';
+  private readonly eventsUrl = 'http://localhost:8080/api/events';
 
   register(payload: SignupPayload): Observable<User> {
-    return this.http.post<User>(this.baseUrl, payload);
+    return this.http.post<User>(this.usersUrl, payload);
+  }
+
+  getEvents(): Observable<any[]> {
+    return this.http.get<any[]>(this.eventsUrl);
   }
 }
-
