@@ -1,4 +1,7 @@
+package com.example.event_manager.dto;
+
 public class LoginResponseDTO {
+
     private Long id;
     private String email;
     private String role;
@@ -9,4 +12,15 @@ public class LoginResponseDTO {
         this.role = role;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getRole() {
+        return role;
+    }
 }

@@ -1,5 +1,7 @@
 package com.example.event_manager.controller;
 
+import com.example.event_manager.dto.LoginRequestDTO;
+import com.example.event_manager.dto.LoginResponseDTO;
 import com.example.event_manager.model.User;
 import com.example.event_manager.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +21,13 @@ public class UserController {
         this.userService = userService;
     }
 
+    // GET all users
     @GetMapping
     public List<User> getAll() {
         return userService.getAllUsers();
     }
 
+    // GET user by ID
     @GetMapping("/{id}")
     public ResponseEntity<User> getById(@PathVariable Integer id) {
         return userService.getUserById(id)
@@ -31,6 +35,7 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // CREATE a new user
     @PostMapping
     public ResponseEntity<User> create(@RequestBody User user) {
         if (userService.emailExists(user.getEmail())) {
@@ -42,6 +47,7 @@ public class UserController {
                 .body(saved);
     }
 
+    // DELETE user
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         if (!userService.existsById(id)) {
@@ -50,5 +56,12 @@ public class UserController {
 
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // LOGIN endpoint
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO request) {
+        LoginResponseDTO response = userService.login(request.getEmail(), request.getPassword());
+        return ResponseEntity.ok(response);
     }
 }
