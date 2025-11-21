@@ -1,0 +1,12 @@
+public class LoginResponseDTO {
+    private Long id;
+    private String email;
+    private String role;
+
+    public LoginResponseDTO(Long id, String email, String role) {
+        this.id = id;
+        this.email = email;
+        this.role = role;
+    }
+
+}
