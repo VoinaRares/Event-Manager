@@ -1,6 +1,5 @@
 package com.example.event_manager.service;
 
-import com.example.event_manager.dto.LoginRequestDTO;
 import com.example.event_manager.dto.LoginResponseDTO;
 import com.example.event_manager.model.User;
 import com.example.event_manager.repository.UserRepository;
@@ -57,16 +56,15 @@ public class UserService {
     
     public LoginResponseDTO login(String email, String rawPassword) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Email sau parolă incorectă"));
+                .orElseThrow(() -> new RuntimeException("Email is not registered"));
 
         if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
-            throw new RuntimeException("Email sau parolă incorectă");
+            throw new RuntimeException("Email sau paro");
         }
 
         return new LoginResponseDTO(
-                user.getId(),
-                user.getEmail(),
-                user.getRole().getName()
+                user.getId().longValue(),
+                user.getEmail()
         );
     }
 }

@@ -4,12 +4,10 @@ public class LoginResponseDTO {
 
     private Long id;
     private String email;
-    private String role;
 
-    public LoginResponseDTO(Long id, String email, String role) {
+    public LoginResponseDTO(Long id, String email) {
         this.id = id;
         this.email = email;
-        this.role = role;
     }
 
     public Long getId() {
@@ -18,9 +16,5 @@ public class LoginResponseDTO {
 
     public String getEmail() {
         return email;
-    }
-
-    public String getRole() {
-        return role;
     }
 }

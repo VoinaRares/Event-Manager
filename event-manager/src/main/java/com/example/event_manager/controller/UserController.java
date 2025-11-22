@@ -1,7 +1,5 @@
 package com.example.event_manager.controller;
 
-import com.example.event_manager.dto.LoginRequestDTO;
-import com.example.event_manager.dto.LoginResponseDTO;
 import com.example.event_manager.model.User;
 import com.example.event_manager.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -58,10 +56,5 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    // LOGIN endpoint
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO request) {
-        LoginResponseDTO response = userService.login(request.getEmail(), request.getPassword());
-        return ResponseEntity.ok(response);
-    }
+
 }
