@@ -19,11 +19,13 @@ public class UserController {
         this.userService = userService;
     }
 
+    // GET all users
     @GetMapping
     public List<User> getAll() {
         return userService.getAllUsers();
     }
 
+    // GET user by ID
     @GetMapping("/{id}")
     public ResponseEntity<User> getById(@PathVariable Integer id) {
         return userService.getUserById(id)
@@ -31,6 +33,7 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // CREATE a new user
     @PostMapping
     public ResponseEntity<User> create(@RequestBody User user) {
         if (userService.emailExists(user.getEmail())) {
@@ -42,6 +45,7 @@ public class UserController {
                 .body(saved);
     }
 
+    // DELETE user
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         if (!userService.existsById(id)) {
@@ -51,4 +55,6 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
+
+
 }
