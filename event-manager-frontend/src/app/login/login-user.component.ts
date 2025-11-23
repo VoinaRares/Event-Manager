@@ -5,6 +5,7 @@ import { finalize } from 'rxjs/operators';
 import { UserService } from '../api/user.service';
 import { LoginPayload } from '../domain/LoginPayload';
 import { Router } from '@angular/router';
+import { OrganizerService } from '../api/organizer.service';
 
 @Component({
   selector: 'app-login',
@@ -15,47 +16,45 @@ import { Router } from '@angular/router';
 export class LoginComponent {
   private readonly fb = inject(FormBuilder);
   private readonly userService = inject(UserService);
+  private readonly organizerService = inject(OrganizerService);
 
   readonly isSubmitting = signal(false);
   readonly submissionError = signal<string | null>(null);
 
   readonly form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required]]
+    password: ['', [Validators.required]],
+    role: ['user']
   });
 
   private readonly router = inject(Router);
   onSubmit(): void {
     this.submissionError.set(null);
 
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-
-    if (this.isSubmitting()) {
-      return;
-    }
+    if (this.form.invalid || this.isSubmitting()) return;
 
     const payload: LoginPayload = {
-      email: this.form.controls.email.value,
-      password: this.form.controls.password.value
+      email: this.form.value.email!,
+      password: this.form.value.password!
     };
 
+    const role = this.form.value.role!;
+
+    const service = role === 'organizer'
+      ? this.organizerService
+      : this.userService;
+
     this.isSubmitting.set(true);
-    this.userService
-      .login(payload)
+
+    service.login(payload)
       .pipe(finalize(() => this.isSubmitting.set(false)))
       .subscribe({
         next: (response) => {
           localStorage.setItem('access_token', response.accessToken);
           localStorage.setItem('refresh_token', response.refreshToken);
+          localStorage.setItem('role', role);
 
-          localStorage.setItem('user', JSON.stringify({
-            id: response.id,
-            email: response.email
-          }));
-          this.router.navigate(['/home']);
+          this.router.navigate(role === 'organizer' ? ['/admin'] : ['/home']);
         },
         error: (error) => {
           if (error.status === 401) {
@@ -68,6 +67,7 @@ export class LoginComponent {
         }
       });
   }
+
 
   resetStatus(): void {
     this.submissionError.set(null);
