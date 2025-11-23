@@ -6,11 +6,10 @@ import com.example.event_manager.repository.UserRepository;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.security.SignatureException;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -57,10 +56,10 @@ public class UserService {
 
     public LoginResponseDTO login(String email, String rawPassword) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Email is not registered"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email is not registered"));
 
         if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
-            throw new RuntimeException("Invalid email or password");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
         }
 
         String accessToken = jwtUtil.generateAccessToken(email, user.getId().longValue());
@@ -80,26 +79,22 @@ public class UserService {
             String tokenType = jwtUtil.extractTokenType(refreshToken);
 
             if (!"refresh".equals(tokenType)) {
-                throw new RuntimeException("Invalid token type");
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token type");
             }
 
             if (jwtUtil.isTokenExpired(refreshToken)) {
-                throw new RuntimeException("Refresh token expired");
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Refresh token expired");
             }
+
             String newAccessToken = jwtUtil.generateAccessToken(email, userId);
             String newRefreshToken = jwtUtil.generateRefreshToken(email, userId);
 
             return new LoginResponseDTO(userId, email, newAccessToken, newRefreshToken);
+
         } catch (ExpiredJwtException e) {
-            throw new RuntimeException("Refresh token has expired");
-        } catch (MalformedJwtException e) {
-            throw new RuntimeException("Malformed refresh token");
-        } catch (SignatureException e) {
-            throw new RuntimeException("Invalid token signature");
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Token type must be 'refresh'");
-        } catch (JwtException e) {
-            throw new RuntimeException("Invalid refresh token: " + e.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Refresh token has expired");
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid refresh token: " + e.getMessage());
         }
     }
 }

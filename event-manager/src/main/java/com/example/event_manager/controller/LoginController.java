@@ -39,7 +39,7 @@ public class LoginController {
         return userService.refreshAccessToken(refreshToken);
     }
 
-    @PostMapping("/organizer/auth/login")
+    @PostMapping("/organizers/auth/login")
     public LoginResponseDTO login_organizer(@RequestBody LoginRequestDTO request) {
         return organizerService.login(request.getEmail(), request.getPassword());
     }

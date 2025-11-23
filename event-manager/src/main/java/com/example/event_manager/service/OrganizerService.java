@@ -9,12 +9,14 @@ import com.example.event_manager.repository.OrganizerRepository;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.security.SignatureException;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Service
@@ -31,7 +33,7 @@ public class OrganizerService {
 
     public OrganizerResponseDto create(OrganizerCreateDto dto) {
         if (organizerRepository.existsByEmail(dto.getEmail())) {
-            throw new IllegalArgumentException("Email already in use");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
         }
 
         String hash = passwordEncoder.encode(dto.getPassword());
@@ -41,7 +43,6 @@ public class OrganizerService {
         return OrganizerMapper.toDto(saved);
     }
 
-    // Create or return existing Organizer entity for use when creating events
     public Organizer findOrCreateEntity(OrganizerCreateDto dto) {
         return organizerRepository.findByEmail(dto.getEmail())
                 .orElseGet(() -> {
@@ -69,10 +70,10 @@ public class OrganizerService {
 
     public LoginResponseDTO login(String email, String rawPassword) {
         Organizer organizer = organizerRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Email is not registered"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email is not registered"));
 
         if (!passwordEncoder.matches(rawPassword, organizer.getPasswordHash())) {
-            throw new RuntimeException("Invalid email or password");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
         }
 
         String accessToken = jwtUtil.generateAccessToken(email, organizer.getId());
@@ -92,26 +93,22 @@ public class OrganizerService {
             String tokenType = jwtUtil.extractTokenType(refreshToken);
 
             if (!"refresh".equals(tokenType)) {
-                throw new RuntimeException("Invalid token type");
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token type");
             }
 
             if (jwtUtil.isTokenExpired(refreshToken)) {
-                throw new RuntimeException("Refresh token expired");
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Refresh token expired");
             }
+
             String newAccessToken = jwtUtil.generateAccessToken(email, userId);
             String newRefreshToken = jwtUtil.generateRefreshToken(email, userId);
 
             return new LoginResponseDTO(userId, email, newAccessToken, newRefreshToken);
+
         } catch (ExpiredJwtException e) {
-            throw new RuntimeException("Refresh token has expired");
-        } catch (MalformedJwtException e) {
-            throw new RuntimeException("Malformed refresh token");
-        } catch (SignatureException e) {
-            throw new RuntimeException("Invalid token signature");
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Token type must be 'refresh'");
-        } catch (JwtException e) {
-            throw new RuntimeException("Invalid refresh token: " + e.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Refresh token has expired");
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid refresh token: " + e.getMessage());
         }
     }
 }
