@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
+import { LoginPayload } from '../domain/LoginPayload';
+import { LoginResponse } from '../domain/LoginResponse';
 
 export interface SignupPayload {
   email: string;
@@ -25,5 +27,9 @@ export class UserService {
 
   getEvents(): Observable<any[]> {
     return this.http.get<any[]>(this.eventsUrl);
+  }
+
+  login(payload: LoginPayload): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.usersUrl}/auth/login`, payload);
   }
 }

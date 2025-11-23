@@ -1,0 +1,54 @@
+<section class="login-wrapper">
+  <header class="login-header">
+    <h1>Log in to your account</h1>
+    <p>Access your events and invitations.</p>
+  </header>
+
+  <form
+    class="login-form"
+    [formGroup]="form"
+    (ngSubmit)="onSubmit()"
+    novalidate
+    (input)="resetStatus()"
+  >
+    <div class="form-field">
+      <label for="email">Email address</label>
+      <input
+        id="email"
+        type="email"
+        formControlName="email"
+        placeholder="you@example.com"
+        autocomplete="email"
+        required
+        [class.invalid]="form.controls.email.invalid && form.controls.email.touched"
+      />
+      <p class="field-error" *ngIf="form.controls.email.errors && form.controls.email.touched">
+        <span *ngIf="form.controls.email.errors['required']">Email is required.</span>
+        <span *ngIf="form.controls.email.errors['email']">Enter a valid email.</span>
+      </p>
+    </div>
+
+    <div class="form-field">
+      <label for="password">Password</label>
+      <input
+        id="password"
+        type="password"
+        formControlName="password"
+        placeholder="Your password"
+        autocomplete="current-password"
+        required
+        [class.invalid]="form.controls.password.invalid && form.controls.password.touched"
+      />
+      <p class="field-error" *ngIf="form.controls.password.errors && form.controls.password.touched">
+        <span *ngIf="form.controls.password.errors['required']">Password is required.</span>
+      </p>
+    </div>
+
+    <p class="form-feedback error" *ngIf="submissionError()">{{ submissionError() }}</p>
+
+    <button type="submit" [disabled]="isSubmitting()">
+      <span *ngIf="!isSubmitting()">Log in</span>
+      <span *ngIf="isSubmitting()">Logging in...</span>
+    </button>
+  </form>
+</section>
