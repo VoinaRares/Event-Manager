@@ -44,4 +44,14 @@ public class LoginController {
         return organizerService.login(request.getEmail(), request.getPassword());
     }
 
+    @PostMapping("/organizers/auth/refresh")
+    public LoginResponseDTO refreshToken_organizer(@RequestHeader("Authorization") String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new RuntimeException("Invalid refresh token");
+        }
+
+        String refreshToken = authHeader.substring(7);
+        return organizerService.refreshAccessToken(refreshToken);
+    }
+
 }
