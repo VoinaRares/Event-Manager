@@ -1,0 +1,49 @@
+<section class="login-wrapper">
+  <header class="login-header">
+    <h1>Log in to your account</h1>
+    <p>Access your events and invitations.</p>
+  </header>
+
+  <form class="login-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate (input)="resetStatus()">
+    <div class="form-field">
+      <label for="email">Email address</label>
+      <input id="email" name="email" type="email" formControlName="email" placeholder="you@example.com"
+        autocomplete="email" required [class.invalid]="form.controls.email.invalid && form.controls.email.touched" />
+    </div>
+
+    <div class="form-field">
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" formControlName="password" placeholder="Your password"
+        autocomplete="current-password" required
+        [class.invalid]="form.controls.password.invalid && form.controls.password.touched" />
+    </div>
+
+    <fieldset class="form-field role-selector">
+      <legend class="role-label">Login as:</legend>
+
+      <div class="role-options">
+        <label for="role-user" class="role-option">
+          <input id="role-user" name="role" type="radio" formControlName="role" value="user" />
+          <span>User</span>
+        </label>
+
+        <label for="role-organizer" class="role-option">
+          <input id="role-organizer" name="role" type="radio" formControlName="role" value="organizer" />
+          <span>Organizer</span>
+        </label>
+      </div>
+    </fieldset>
+
+
+
+    <p class="form-feedback error" *ngIf="submissionError()">
+      {{ submissionError() }}
+    </p>
+    <button type="submit" [disabled]="isSubmitting()">
+      <span *ngIf="!isSubmitting()">Log in</span>
+      <span *ngIf="isSubmitting()">Logging in...</span>
+    </button>
+
+  </form>
+
+</section>
