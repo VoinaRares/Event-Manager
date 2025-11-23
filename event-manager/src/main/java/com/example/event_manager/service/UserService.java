@@ -91,15 +91,15 @@ public class UserService {
 
             return new LoginResponseDTO(userId, email, newAccessToken, newRefreshToken);
         } catch (ExpiredJwtException e) {
-        throw new RuntimeException("Refresh token has expired");
-    } catch (MalformedJwtException e) {
-        throw new RuntimeException("Malformed refresh token");
-    } catch (SignatureException e) {
-        throw new RuntimeException("Invalid token signature");
-    } catch (IllegalArgumentException e) {
-        throw new RuntimeException("Token type must be 'refresh'");
-    } catch (JwtException e) {
-        throw new RuntimeException("Invalid refresh token: " + e.getMessage());
-    }
+            throw new RuntimeException("Refresh token has expired");
+        } catch (MalformedJwtException e) {
+            throw new RuntimeException("Malformed refresh token");
+        } catch (SignatureException e) {
+            throw new RuntimeException("Invalid token signature");
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Token type must be 'refresh'");
+        } catch (JwtException e) {
+            throw new RuntimeException("Invalid refresh token: " + e.getMessage());
+        }
     }
 }

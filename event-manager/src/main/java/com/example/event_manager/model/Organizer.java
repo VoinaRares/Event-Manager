@@ -23,7 +23,7 @@ public class Organizer {
 
     @JsonIgnore
     @NotBlank
-    private String passwordHash; // stocăm hash-ul (BCrypt)
+    private String passwordHash;
 
     private String phone;
 
