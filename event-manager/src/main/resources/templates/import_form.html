@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Import Events</title>
+</head>
+<body>
+<h2>Import Events from CSV</h2>
+<form method="post" enctype="multipart/form-data" action="/api/import/csv">
+    <input type="file" name="file" accept=".csv" required />
+    <button type="submit">Upload CSV</button>
+</form>
+<hr/>
+<h2>Import Events from Excel</h2>
+<form method="post" enctype="multipart/form-data" action="/api/import/excel">
+    <input type="file" name="file" accept=".xlsx" required />
+    <button type="submit">Upload Excel</button>
+</form>
+</body>
+</html>
