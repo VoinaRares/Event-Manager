@@ -52,7 +52,7 @@ export class UserHomeComponent implements OnInit {
     this.error.set(null);
     this.userService
       .getInvitations(userId)
-      .pipe(takeUntilDestroyed())
+      .pipe()
       .subscribe({
         next: (response) => {
           this.pendingEvents.set(response.pending);
@@ -75,7 +75,7 @@ export class UserHomeComponent implements OnInit {
     this.respondingEvent.set(eventId);
     this.userService
       .respondToInvitation(userId, eventId, action)
-      .pipe(takeUntilDestroyed())
+      .pipe()
       .subscribe({
         next: () => {
           this.fetchInvitations(userId);
@@ -92,7 +92,7 @@ export class UserHomeComponent implements OnInit {
     this.loading.set(true);
     this.userService
       .lookupByEmail(email)
-      .pipe(takeUntilDestroyed())
+      .pipe()
       .subscribe({
         next: (user) => {
           this.sessionService.updateSession({ userId: user.id, email: user.email, role: 'user' });
