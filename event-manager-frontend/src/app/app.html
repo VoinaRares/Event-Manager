@@ -1,8 +1,12 @@
 <header class="app-header">
   <div class="brand">Event Manager</div>
   <nav>
-    <a routerLink="/signup" routerLinkActive="active-link">Sign up</a>
-    <a routerLink="/admin" routerLinkActive="active-link">Admin home</a>
+    <a routerLink="/signup/organizer" routerLinkActive="active-link">Organizer signup</a>
+    <a routerLink="/signup/user" routerLinkActive="active-link">User signup</a>
+    <a routerLink="/login" routerLinkActive="active-link">Login</a>
+    <a *ngIf="session.role() === 'organizer'" routerLink="/admin" routerLinkActive="active-link">
+      Admin home
+    </a>
   </nav>
 </header>
 

@@ -14,19 +14,40 @@ export interface User {
   email: string;
 }
 
+export interface UserInvitation {
+  eventId: number;
+  name: string;
+  startDate: string;
+  endDate: string;
+  locationName: string | null;
+}
+
+export interface UserInvitationsResponse {
+  pending: UserInvitation[];
+  confirmed: UserInvitation[];
+}
+
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private readonly http = inject(HttpClient);
 
   private readonly usersUrl = 'http://localhost:8080/api/users';
-  private readonly eventsUrl = 'http://localhost:8080/api/events';
 
   register(payload: SignupPayload): Observable<User> {
     return this.http.post<User>(this.usersUrl, payload);
   }
 
-  getEvents(): Observable<any[]> {
-    return this.http.get<any[]>(this.eventsUrl);
+  lookupByEmail(email: string): Observable<User> {
+    return this.http.get<User>(`${this.usersUrl}/lookup`, { params: { email } });
+  }
+
+  getInvitations(userId: number): Observable<UserInvitationsResponse> {
+    return this.http.get<UserInvitationsResponse>(`${this.usersUrl}/${userId}/invitations`);
+  }
+
+  respondToInvitation(userId: number, eventId: number, action: 'accept' | 'decline'): Observable<void> {
+    const endpoint = action === 'accept' ? 'accept' : 'decline';
+    return this.http.post<void>(`${this.usersUrl}/${userId}/invitations/${eventId}/${endpoint}`, {});
   }
 
   login(payload: LoginPayload): Observable<LoginResponse> {

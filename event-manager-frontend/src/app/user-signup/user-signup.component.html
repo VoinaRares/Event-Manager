@@ -1,7 +1,7 @@
 <section class="signup-wrapper">
   <header class="signup-header">
-    <h1>Create your organizer account</h1>
-    <p>Manage your events and invitations in one place.</p>
+    <h1>Create your user account</h1>
+    <p>Join events, respond to invitations, and share memories.</p>
   </header>
 
   <form
@@ -11,23 +11,6 @@
     novalidate
     (input)="resetStatus()"
   >
-    <div class="form-field">
-      <label for="name">Full name</label>
-      <input
-        id="name"
-        type="text"
-        formControlName="name"
-        placeholder="Jane Organizer"
-        autocomplete="name"
-        required
-        [class.invalid]="form.controls.name.invalid && form.controls.name.touched"
-      />
-      <p class="field-error" *ngIf="form.controls.name.errors && form.controls.name.touched">
-        <span *ngIf="form.controls.name.errors['required']">Name is required.</span>
-        <span *ngIf="form.controls.name.errors['minlength']">Name must be at least 3 characters.</span>
-      </p>
-    </div>
-
     <div class="form-field">
       <label for="email">Email address</label>
       <input
@@ -43,17 +26,6 @@
         <span *ngIf="form.controls.email.errors['required']">Email is required.</span>
         <span *ngIf="form.controls.email.errors['email']">Enter a valid email.</span>
       </p>
-    </div>
-
-    <div class="form-field">
-      <label for="phone">Phone number (optional)</label>
-      <input
-        id="phone"
-        type="tel"
-        formControlName="phone"
-        placeholder="+40 712 345 678"
-        autocomplete="tel"
-      />
     </div>
 
     <div class="form-field">
@@ -103,3 +75,4 @@
     </button>
   </form>
 </section>
+

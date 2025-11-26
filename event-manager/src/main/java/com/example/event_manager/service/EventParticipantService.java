@@ -17,6 +17,7 @@ public class EventParticipantService {
 
     private final EventParticipantRepository eventParticipantRepository;
     private final EventRepository eventRepository;
+    private final UserRepository userRepository;
     private final EmailService emailService;
 
     public EventParticipantService(
@@ -26,6 +27,7 @@ public class EventParticipantService {
             EmailService emailService) {
         this.eventParticipantRepository = eventParticipantRepository;
         this.eventRepository = eventRepository;
+        this.userRepository = userRepository;
         this.emailService = emailService;
     }
 
@@ -64,6 +66,30 @@ public class EventParticipantService {
                 .orElseThrow(() -> new EntityNotFoundException("Event not found with id: " + eventId));
         EventParticipant participant = eventParticipantRepository.findByEventAndToken(event, token)
                 .orElseThrow(() -> new EntityNotFoundException("Invitation not found for token: " + token));
+        eventParticipantRepository.delete(participant);
+    }
+
+    @Transactional
+    public void acceptInvitation(Long eventId, Integer userId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new EntityNotFoundException("Event not found with id: " + eventId));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
+        EventParticipant participant = eventParticipantRepository.findByEventAndUser(event, user)
+                .orElseThrow(() -> new EntityNotFoundException("Invitation not found for user: " + userId));
+        participant.setComing(true);
+        participant.setResponded(true);
+        eventParticipantRepository.save(participant);
+    }
+
+    @Transactional
+    public void rejectInvitation(Long eventId, Integer userId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new EntityNotFoundException("Event not found with id: " + eventId));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
+        EventParticipant participant = eventParticipantRepository.findByEventAndUser(event, user)
+                .orElseThrow(() -> new EntityNotFoundException("Invitation not found for user: " + userId));
         eventParticipantRepository.delete(participant);
     }
 }

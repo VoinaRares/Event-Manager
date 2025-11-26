@@ -6,6 +6,7 @@ import { UserService } from '../api/user.service';
 import { LoginPayload } from '../domain/LoginPayload';
 import { Router } from '@angular/router';
 import { OrganizerService } from '../api/organizer.service';
+import { SessionService } from '../session/session.service';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +18,7 @@ export class LoginComponent {
   private readonly fb = inject(FormBuilder);
   private readonly userService = inject(UserService);
   private readonly organizerService = inject(OrganizerService);
+  private readonly sessionService = inject(SessionService);
 
   readonly isSubmitting = signal(false);
   readonly submissionError = signal<string | null>(null);
@@ -38,25 +40,32 @@ export class LoginComponent {
       password: this.form.value.password!
     };
 
-    const role = this.form.value.role!;
-
-    const service = role === 'organizer'
-      ? this.organizerService
-      : this.userService;
-
+    const preferredRole = this.form.value.role! as 'organizer' | 'user';
     this.isSubmitting.set(true);
+    this.tryLogin(preferredRole, payload, true);
+  }
 
-    service.login(payload)
-      .pipe(finalize(() => this.isSubmitting.set(false)))
-      .subscribe({
+  private tryLogin(role: 'organizer' | 'user', payload: LoginPayload, allowFallback: boolean): void {
+    const service = role === 'organizer' ? this.organizerService : this.userService;
+    service.login(payload).subscribe({
         next: (response) => {
+          this.isSubmitting.set(false);
           localStorage.setItem('access_token', response.accessToken);
           localStorage.setItem('refresh_token', response.refreshToken);
-          localStorage.setItem('role', role);
-
+          this.sessionService.setSession({
+            role,
+            userId: response.id,
+            email: response.email
+          });
           this.router.navigate(role === 'organizer' ? ['/admin'] : ['/home']);
         },
         error: (error) => {
+          if (error.status === 401 && allowFallback) {
+            const fallbackRole = role === 'organizer' ? 'user' : 'organizer';
+            this.tryLogin(fallbackRole, payload, false);
+            return;
+          }
+          this.isSubmitting.set(false);
           if (error.status === 401) {
             this.submissionError.set('Incorrect email or password.');
           } else if (error.status === 0) {
@@ -67,7 +76,6 @@ export class LoginComponent {
         }
       });
   }
-
 
   resetStatus(): void {
     this.submissionError.set(null);

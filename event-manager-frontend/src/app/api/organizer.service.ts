@@ -10,6 +10,13 @@ export interface Organizer {
   email: string;
 }
 
+export interface OrganizerSignupPayload {
+  name: string;
+  email: string;
+  password: string;
+  phone?: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class OrganizerService {
   private readonly http = inject(HttpClient);
@@ -19,8 +26,11 @@ export class OrganizerService {
     return this.http.get<Organizer[]>(this.baseUrl);
   }
 
+  register(payload: OrganizerSignupPayload): Observable<Organizer> {
+    return this.http.post<Organizer>(this.baseUrl, payload);
+  }
+
   login(payload: LoginPayload): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.baseUrl}/auth/login`, payload);
   }
 }
-

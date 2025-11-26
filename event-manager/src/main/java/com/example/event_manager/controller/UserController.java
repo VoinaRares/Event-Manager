@@ -1,6 +1,9 @@
 package com.example.event_manager.controller;
 
+import com.example.event_manager.dto.UserInvitationsResponseDto;
 import com.example.event_manager.model.User;
+import com.example.event_manager.service.EventParticipantService;
+import com.example.event_manager.service.UserInvitationService;
 import com.example.event_manager.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +17,15 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final UserInvitationService invitationService;
+    private final EventParticipantService participantService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService,
+                          UserInvitationService invitationService,
+                          EventParticipantService participantService) {
         this.userService = userService;
+        this.invitationService = invitationService;
+        this.participantService = participantService;
     }
 
     // GET all users
@@ -29,6 +38,13 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<User> getById(@PathVariable Integer id) {
         return userService.getUserById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/lookup")
+    public ResponseEntity<User> getByEmail(@RequestParam String email) {
+        return userService.getUserByEmail(email)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -56,5 +72,23 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/{id}/invitations")
+    public ResponseEntity<UserInvitationsResponseDto> getInvitations(@PathVariable Integer id) {
+        if (!userService.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(invitationService.getInvitations(id));
+    }
 
+    @PostMapping("/{userId}/invitations/{eventId}/accept")
+    public ResponseEntity<Void> acceptInvitation(@PathVariable Integer userId, @PathVariable Long eventId) {
+        participantService.acceptInvitation(eventId, userId);
+        return ResponseEntity.accepted().build();
+    }
+
+    @PostMapping("/{userId}/invitations/{eventId}/decline")
+    public ResponseEntity<Void> declineInvitation(@PathVariable Integer userId, @PathVariable Long eventId) {
+        participantService.rejectInvitation(eventId, userId);
+        return ResponseEntity.accepted().build();
+    }
 }
