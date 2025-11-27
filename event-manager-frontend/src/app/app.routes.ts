@@ -7,9 +7,10 @@ import { UserHomeComponent } from './user-home/user-home.component';
 import { LoginComponent } from './login/login-user.component';
 import { organizerGuard } from './guards/organizer.guard';
 import { UserSignupComponent } from './user-signup/user-signup.component';
+import { LandingComponent } from './landing/landing.component';
 
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'signup/organizer' },
+  { path: '', pathMatch: 'full', component: LandingComponent },
   { path: 'signup', pathMatch: 'full', redirectTo: 'signup/organizer' },
   { path: 'signup/organizer', component: SignupComponent },
   { path: 'signup/user', component: UserSignupComponent },
