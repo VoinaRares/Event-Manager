@@ -1,0 +1,15 @@
+.landing-container { font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial; color:#222; }
+.navbar { display:flex; justify-content:space-between; align-items:center; padding:1rem 2rem; }
+.brand { font-weight:700; font-size:1.25rem; }
+.btn { padding:.5rem 1rem; text-decoration:none; border-radius:6px; }
+.btn-primary { background:#0d6efd; color:#fff; }
+.btn-outline { border:1px solid #0d6efd; color:#0d6efd; }
+.hero { display:flex; gap:2rem; padding:3rem; align-items:center; }
+.hero-left { flex:1; }
+.hero-right img { max-width:420px; width:100%; border-radius:8px; }
+.features { display:flex; gap:1rem; justify-content:space-around; padding:2rem; }
+.feature { max-width:300px; text-align:center; }
+.footer { text-align:center; padding:1rem 0; background:#f8f9fa; margin-top:2rem; }
+@media (max-width:800px) {
+  .hero { flex-direction:column; text-align:center; }
+}

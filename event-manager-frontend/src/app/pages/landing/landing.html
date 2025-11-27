@@ -1,0 +1,47 @@
+<div class="landing-container">
+  <nav class="navbar">
+    <div class="brand">Event Manager</div>
+    <div class="nav-actions">
+      <a href="/login" class="btn btn-outline">Autentificare</a>
+      <a href="/signup" class="btn btn-primary">Înregistrare</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-left">
+      <h1>Digitalizează-ți nunta</h1>
+      <p>Invitații, RSVP, program și galerie foto — totul într-un singur loc.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="/signup">Creează cont</a>
+        <a class="btn btn-ghost" href="/invite-response">Sunt invitat</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <img src="/assets/images/wedding-hero.jpg" alt="wedding" />
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="feature">
+      <h3>Invitații & RSVP</h3>
+      <p>Import Excel, trimite invitații și gestionează confirmările.</p>
+    </div>
+    <div class="feature">
+      <h3>Programul</h3>
+      <p>Trimite programul automat doar invitaților confirmați.</p>
+    </div>
+    <div class="feature">
+      <h3>Galerie</h3>
+      <p>Participanții încarcă și vizualizează pozele evenimentului.</p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <small>© <span id="year"></span> Event Manager</small>
+  </footer>
+</div>
+
+<script>
+  // set current year
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
