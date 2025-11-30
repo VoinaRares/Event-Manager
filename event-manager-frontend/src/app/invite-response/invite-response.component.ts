@@ -4,6 +4,18 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { EventService } from '../api/event.service';
 import { EventDto } from '../domain/EventDto';
 import { EventParticipant } from '../domain/EventParticipant';
+import { SessionService } from '../session/session.service';
+
+export interface InvitationInfo {
+  eventId: number;
+  eventName: string;
+  startDate: string;
+  endDate: string;
+  locationName: string;
+  invitedEmail: string;
+  expiresAt: string;
+  expired: boolean;
+}
 
 @Component({
   selector: 'app-invite-response',
@@ -16,13 +28,17 @@ export class InviteResponseComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly eventService = inject(EventService);
+  private readonly sessionService = inject(SessionService);
 
   readonly event = signal<EventDto | null>(null);
   readonly invitedParticipant = signal<EventParticipant | null>(null);
+  readonly invitationInfo = signal<InvitationInfo | null>(null);
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
   readonly processing = signal(false);
   readonly actionMessage = signal<string | null>(null);
+  readonly isAuthenticated = signal(false);
+  readonly requiresSignup = signal(false);
 
   private eventId!: number;
   private token!: string;
@@ -37,11 +53,17 @@ export class InviteResponseComponent implements OnInit {
     }
     this.eventId = Number(ev);
     this.token = t;
+    const isAuth = this.sessionService.role() !== null;
+    this.isAuthenticated.set(isAuth);
 
-    this.fetchEvent();
+    if (isAuth) {
+      this.fetchEventForAuthenticated();
+    } else {
+      this.fetchInvitationInfo();
+    }
   }
 
-  private fetchEvent(): void {
+  private fetchEventForAuthenticated(): void {
     this.loading.set(true);
     this.error.set(null);
     this.eventService.list().subscribe({
@@ -54,7 +76,6 @@ export class InviteResponseComponent implements OnInit {
           this.loading.set(false);
           return;
         }
-        console.log(this.eventId, this.token, found.participants);
 
         const participant = (found.participants || []).find((p) => p.token === this.token) ?? null;
         if (!participant) {
@@ -69,6 +90,34 @@ export class InviteResponseComponent implements OnInit {
         this.error.set('Unable to load event. Please try again later.');
         this.event.set(null);
         this.invitedParticipant.set(null);
+        this.loading.set(false);
+      }
+    });
+  }
+
+  private fetchInvitationInfo(): void {
+    this.loading.set(true);
+    this.error.set(null);
+    
+    this.eventService.getInvitationInfo(this.eventId, this.token).subscribe({
+      next: (info) => {
+        this.invitationInfo.set(info);
+        if (info.expired) {
+          this.error.set('This invitation has expired.');
+        }
+        this.requiresSignup.set(true);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        if (err.status === 404) {
+          this.error.set('Invitation not found.');
+        } else if (err.status === 410) {
+          this.error.set('This invitation has expired.');
+        } else if (err.status === 409) {
+          this.error.set('This invitation has already been used.');
+        } else {
+          this.error.set('Unable to load invitation. Please try again later.');
+        }
         this.loading.set(false);
       }
     });
@@ -111,4 +160,15 @@ export class InviteResponseComponent implements OnInit {
       }
     });
   }
+
+  goToSignup(): void {
+    this.router.navigate(['/signup-from-invite'], {
+      queryParams: {
+        eventId: this.eventId,
+        token: this.token,
+        email: this.invitationInfo()?.invitedEmail
+      }
+    });
+  }
 }
+

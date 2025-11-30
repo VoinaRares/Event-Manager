@@ -27,9 +27,17 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    private String name;
+
     public User() {}
 
     public User(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    public User(String name, String email, String password) {
+        this.name = name;
         this.email = email;
         this.password = password;
     }
@@ -45,4 +53,8 @@ public class User {
     public String getPassword() { return password; }
 
     public void setPassword(String password) { this.password = password; }
+
+    public String getName() { return name; }
+
+    public void setName(String name) { this.name = name; }
 }

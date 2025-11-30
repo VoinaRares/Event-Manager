@@ -7,15 +7,19 @@ import { UserHomeComponent } from './user-home/user-home.component';
 import { LoginComponent } from './login/login-user.component';
 import { organizerGuard } from './guards/organizer.guard';
 import { UserSignupComponent } from './user-signup/user-signup.component';
+import { SignupFromInviteComponent } from './signup-from-invite/signup-from-invite.component';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'signup/organizer' },
   { path: 'signup', pathMatch: 'full', redirectTo: 'signup/organizer' },
   { path: 'signup/organizer', component: SignupComponent },
   { path: 'signup/user', component: UserSignupComponent },
+  { path: 'signup-from-invite', component: SignupFromInviteComponent },
   { path: 'invite/:eventId/:token', component: InviteResponseComponent },
+  { path: 'user-home', component: UserHomeComponent },
   { path: 'home', component: UserHomeComponent },
   { path: 'admin', component: AdminHomeComponent, canActivate: [organizerGuard] },
   { path: 'login', component: LoginComponent},
   { path: '**', redirectTo: 'signup/organizer' }
 ];
+

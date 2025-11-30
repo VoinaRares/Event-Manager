@@ -8,16 +8,16 @@ import com.example.event_manager.model.User;
 import com.example.event_manager.repository.EventRepository;
 import com.example.event_manager.repository.OrganizerRepository;
 import com.example.event_manager.repository.UserRepository;
+
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.UUID;
-
 @Service
 public class AdminEventService {
 
@@ -46,8 +46,7 @@ public class AdminEventService {
                 dto.getEndDate(),
                 dto.getLongitude(),
                 dto.getLatitude(),
-                dto.getPlaceId()
-        );
+                dto.getPlaceId());
         event.setLocationName(dto.getLocationName());
         event.setOrganizers(organizers);
         return eventRepository.save(event);
@@ -97,15 +96,18 @@ public class AdminEventService {
                 .orElseThrow(() -> new EntityNotFoundException("Event not found with id " + eventId));
 
         User user = userRepository.findByEmail(email)
-                .orElseGet(() -> userRepository.save(new User(email, generateTemporaryPassword())));
+            .orElse(null);
 
-        boolean alreadyInvited = event.getParticipants() != null && event.getParticipants().stream()
-                .anyMatch(p -> p.getUser().getId().equals(user.getId()));
-        if (alreadyInvited) {
-            throw new ValidationException("User already invited to this event");
+        if (user != null) {
+            boolean alreadyInvited = event.getParticipants() != null && event.getParticipants().stream()
+                    .anyMatch(p -> p.getUser().getId().equals(user.getId()));
+            if (alreadyInvited) {
+                throw new ValidationException("User already invited to this event");
+            }
+            participantService.inviteParticipant(event, user);
+            return;
         }
-
-        participantService.inviteParticipant(event, user);
+        participantService.inviteParticipant(event, email);
     }
 
     private Set<Organizer> fetchOrganizers(List<Long> ids) {
@@ -119,7 +121,4 @@ public class AdminEventService {
         return organizers.stream().collect(Collectors.toSet());
     }
 
-    private String generateTemporaryPassword() {
-        return UUID.randomUUID().toString();
-    }
 }
