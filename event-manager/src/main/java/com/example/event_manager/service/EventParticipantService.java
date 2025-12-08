@@ -184,13 +184,18 @@ public class EventParticipantService {
         @Transactional
         public void rejectInvitation(Long eventId, Integer userId) {
                 Event event = eventRepository.findById(eventId)
-                                .orElseThrow(() -> new EntityNotFoundException("Event not found with id: " + eventId));
+                        .orElseThrow(() -> new EntityNotFoundException("Event not found"));
                 User user = userRepository.findById(userId)
-                                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
-                EventParticipant participant = eventParticipantRepository.findByEventAndUser(event, user)
-                                .orElseThrow(() -> new EntityNotFoundException(
-                                                "Invitation not found for user: " + userId));
-                eventParticipantRepository.delete(participant);
+                        .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+                EventParticipant participant = eventParticipantRepository
+                        .findByEventAndUser(event, user)
+                        .orElseThrow(() -> new EntityNotFoundException("Invitation not found"));
+
+                participant.setComing(false);
+                participant.setResponded(true);
+                eventParticipantRepository.save(participant);
         }
+
 }
 

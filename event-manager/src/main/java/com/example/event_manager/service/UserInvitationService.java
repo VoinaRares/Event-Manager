@@ -22,7 +22,7 @@ public class UserInvitationService {
         List<EventParticipant> participants = participantRepository.findByUser_Id(userId);
 
         List<UserInvitationDto> confirmed = participants.stream()
-                .filter(EventParticipant::isComing)
+                .filter(p -> p.isResponded() && p.isComing())
                 .map(this::toDto)
                 .collect(Collectors.toList());
 
@@ -34,6 +34,20 @@ public class UserInvitationService {
         UserInvitationsResponseDto response = new UserInvitationsResponseDto();
         response.setPending(pending);
         response.setConfirmed(confirmed);
+        return response;
+    }
+
+    public UserInvitationsResponseDto getHistory(Integer userId) {
+        List<EventParticipant> participants = participantRepository.findByUser_Id(userId);
+
+        List<UserInvitationDto> history = participants.stream()
+                .filter(EventParticipant::isResponded)
+                .map(this::toDto)
+                .collect(Collectors.toList());
+
+        UserInvitationsResponseDto response = new UserInvitationsResponseDto();
+        response.setPending(List.of());
+        response.setConfirmed(history);
         return response;
     }
 

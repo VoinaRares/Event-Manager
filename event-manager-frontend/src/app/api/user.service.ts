@@ -30,7 +30,6 @@ export interface UserInvitationsResponse {
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private readonly http = inject(HttpClient);
-
   private readonly usersUrl = 'http://localhost:8080/api/users';
 
   register(payload: SignupPayload): Observable<User> {
@@ -43,6 +42,10 @@ export class UserService {
 
   getInvitations(userId: number): Observable<UserInvitationsResponse> {
     return this.http.get<UserInvitationsResponse>(`${this.usersUrl}/${userId}/invitations`);
+  }
+
+  getHistory(userId: number): Observable<UserInvitationsResponse> {
+    return this.http.get<UserInvitationsResponse>(`${this.usersUrl}/${userId}/history`);
   }
 
   respondToInvitation(userId: number, eventId: number, action: 'accept' | 'decline'): Observable<void> {

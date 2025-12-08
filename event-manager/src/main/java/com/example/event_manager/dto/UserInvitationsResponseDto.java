@@ -5,6 +5,7 @@ import java.util.List;
 public class UserInvitationsResponseDto {
     private List<UserInvitationDto> pending;
     private List<UserInvitationDto> confirmed;
+    private List<UserInvitationDto> rejected;
 
     public List<UserInvitationDto> getPending() {
         return pending;
@@ -21,5 +22,12 @@ public class UserInvitationsResponseDto {
     public void setConfirmed(List<UserInvitationDto> confirmed) {
         this.confirmed = confirmed;
     }
-}
 
+    public List<UserInvitationDto> getRejected() {
+        return rejected;
+    }
+
+    public void setRejected(List<UserInvitationDto> rejected) {
+        this.rejected = rejected;
+    }
+}

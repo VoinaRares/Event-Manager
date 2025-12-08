@@ -45,6 +45,7 @@ public class EventParticipant {
         this.invitationSentAt = LocalDateTime.now();
         this.token = token;
     }
+
     public String getToken() {
         return token;
     }
@@ -61,20 +62,8 @@ public class EventParticipant {
         return event;
     }
 
-    public void setEvent(Event event) {
-        this.event = event;
-        if (this.id == null) this.id = new EventParticipantId();
-        this.id.setEventId(event != null ? event.getId() : null);
-    }
-
     public User getUser() {
         return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-        if (this.id == null) this.id = new EventParticipantId();
-        this.id.setUserId(user != null ? user.getId() : null);
     }
 
     public boolean isComing() {
