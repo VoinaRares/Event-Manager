@@ -92,9 +92,7 @@ public class EventParticipantService {
                 EventParticipant participant = eventParticipantRepository.findByEventAndToken(event, token)
                                 .orElseThrow(() -> new EntityNotFoundException(
                                                 "Invitation not found for token: " + token));
-                participant.setComing(false);
-                participant.setResponded(true);
-                eventParticipantRepository.save(participant);
+                eventParticipantRepository.delete(participant);
         }
 
         @Transactional
@@ -192,9 +190,7 @@ public class EventParticipantService {
                 EventParticipant participant = eventParticipantRepository.findByEventAndUser(event, user)
                                 .orElseThrow(() -> new EntityNotFoundException(
                                                 "Invitation not found for user: " + userId));
-                participant.setComing(false);
-                participant.setResponded(true);
-                eventParticipantRepository.save(participant);
+                eventParticipantRepository.delete(participant);
         }
 }
 
