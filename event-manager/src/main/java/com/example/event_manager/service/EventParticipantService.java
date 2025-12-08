@@ -1,5 +1,12 @@
 package com.example.event_manager.service;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.event_manager.model.Event;
 import com.example.event_manager.model.EventParticipant;
 import com.example.event_manager.model.InvitationToken;
@@ -8,12 +15,8 @@ import com.example.event_manager.repository.EventParticipantRepository;
 import com.example.event_manager.repository.EventRepository;
 import com.example.event_manager.repository.InvitationTokenRepository;
 import com.example.event_manager.repository.UserRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
 import jakarta.persistence.EntityNotFoundException;
-import java.security.SecureRandom;
-import java.math.BigInteger;
-import java.time.LocalDateTime;
 
 @Service
 public class EventParticipantService {
@@ -92,7 +95,9 @@ public class EventParticipantService {
                 EventParticipant participant = eventParticipantRepository.findByEventAndToken(event, token)
                                 .orElseThrow(() -> new EntityNotFoundException(
                                                 "Invitation not found for token: " + token));
-                eventParticipantRepository.delete(participant);
+                participant.setComing(false);
+                participant.setResponded(true);
+                eventParticipantRepository.save(participant);
         }
 
         @Transactional

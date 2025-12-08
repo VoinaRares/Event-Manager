@@ -98,7 +98,8 @@ export class SignupFromInviteComponent implements OnInit {
           this.form.markAsPristine();
           this.form.markAsUntouched();
           this.submissionSuccess.set(true);
-          
+          localStorage.setItem('access_token', response.accessToken);
+          localStorage.setItem('refresh_token', response.refreshToken);
           this.sessionService.setSession({
             role: 'user',
             userId: response.id,
