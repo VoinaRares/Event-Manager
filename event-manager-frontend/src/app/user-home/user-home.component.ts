@@ -18,6 +18,7 @@ export class UserHomeComponent implements OnInit {
   readonly error = signal<string | null>(null);
 
   readonly pendingEvents = signal<UserInvitation[]>([]);
+  readonly confirmedEvents = signal<UserInvitation[]>([]);
   readonly historyEvents = signal<UserInvitation[]>([]);
 
   readonly respondingEvent = signal<number | null>(null);
@@ -54,13 +55,18 @@ export class UserHomeComponent implements OnInit {
     this.respond(eventId, 'decline');
   }
 
+  isAcceptedInHistory(eventId: number): boolean {
+    return this.confirmedEvents().some(e => e.eventId === eventId);
+  }
+
   private fetchAll(userId: number): void {
     this.loading.set(true);
     this.error.set(null);
 
     this.userService.getInvitations(userId).subscribe({
       next: (response) => {
-        this.pendingEvents.set(response.pending);
+        this.pendingEvents.set(response.pending ?? []);
+        this.confirmedEvents.set(response.confirmed ?? []);
       },
       error: () => {
         this.error.set('Failed to load invitations.');
@@ -69,7 +75,7 @@ export class UserHomeComponent implements OnInit {
 
     this.userService.getHistory(userId).subscribe({
       next: (response) => {
-        this.historyEvents.set(response.confirmed);
+        this.historyEvents.set(response.confirmed ?? []);
         this.loading.set(false);
       },
       error: () => {
