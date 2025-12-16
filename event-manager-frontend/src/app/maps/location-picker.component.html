@@ -1,0 +1,43 @@
+<div class="location-picker">
+  <label class="field">
+    <span class="field-label">Location</span>
+    <input
+      #searchInput
+      type="text"
+      [ngModel]="locationName"
+      (ngModelChange)="onInputChange($event)"
+      [placeholder]="placeholder"
+      autocomplete="off"
+    />
+    <small class="hint">Search a venue or click on the map to drop a pin.</small>
+  </label>
+
+  <div class="map-wrapper">
+    <div class="map-placeholder" *ngIf="!apiReady && !authFailed">
+      Loading Google Maps...
+    </div>
+
+    <google-map
+      *ngIf="apiReady && !authFailed"
+      height="320px"
+      width="100%"
+      [center]="center"
+      [zoom]="zoom"
+      (mapInitialized)="onMapReady($event)"
+      (mapClick)="onMapClick($event)"
+      (authFailure)="onAuthFailure()"
+    >
+      <map-marker *ngIf="markerPosition" [position]="markerPosition"></map-marker>
+    </google-map>
+
+    <div class="map-error" *ngIf="authFailed">
+      Google Maps could not load. Please set a valid API key.
+    </div>
+  </div>
+
+  <div class="selection" *ngIf="markerPosition">
+    <span class="pill">Lat {{ markerPosition.lat | number: '1.5-5' }}</span>
+    <span class="pill">Lng {{ markerPosition.lng | number: '1.5-5' }}</span>
+    <button type="button" (click)="clearSelection()">Clear pin</button>
+  </div>
+</div>

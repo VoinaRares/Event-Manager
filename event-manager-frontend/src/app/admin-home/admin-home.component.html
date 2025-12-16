@@ -4,7 +4,7 @@
     <p class="eyebrow">Organizer dashboard</p>
     <h1>Admin homepage</h1>
     <p class="subtitle" *ngIf="dashboard() as data">
-      Monitoring {{ data.organizerName }} · {{ data.organizerEmail }}
+      Monitoring {{ data.organizerName }} - {{ data.organizerEmail }}
     </p>
   </div>
   <label class="organizer-select">
@@ -24,7 +24,7 @@
       <p>Fill in the essentials and pick a co-host.</p>
     </div>
     <button type="button" (click)="createEvent()" [disabled]="creatingEvent()">
-      {{ creatingEvent() ? 'Creating…' : 'Create event' }}
+      {{ creatingEvent() ? 'Creating...' : 'Create event' }}
     </button>
   </header>
 
@@ -41,15 +41,15 @@
       <span>End date</span>
       <input type="date" [(ngModel)]="eventDraft.endDate" name="endDate" />
     </label>
-    <label class="wide">
-      <span>Location</span>
-      <input
-        type="text"
-        [(ngModel)]="eventDraft.locationName"
-        name="locationName"
+    <div class="wide location-picker-container">
+      <app-location-picker
+        [locationName]="eventDraft.locationName"
+        (locationNameChange)="eventDraft.locationName = $event"
+        (locationSelected)="onLocationSelected($event)"
+        (locationCleared)="onLocationCleared()"
         placeholder="Venue name or address"
-      />
-    </label>
+      ></app-location-picker>
+    </div>
     <label>
       <span>Co-host organizer</span>
       <select [(ngModel)]="eventDraft.coHostId" name="coHost">
@@ -65,7 +65,7 @@
   <p class="form-feedback success" *ngIf="createSuccess()">{{ createSuccess() }}</p>
 </section>
 
-<section *ngIf="loading()" class="state-card">Loading data…</section>
+<section *ngIf="loading()" class="state-card">Loading data...</section>
 <section *ngIf="error()" class="state-card error">{{ error() }}</section>
 
 <ng-container *ngIf="dashboard() as data">
@@ -117,10 +117,13 @@
         <div class="event-card__header">
           <div>
             <h3>{{ event.name }}</h3>
-            <p>{{ event.startDate }} → {{ event.endDate }}</p>
-            <p class="event-card__location" *ngIf="event.locationName">
-              {{ event.locationName }}
-            </p>
+            <p>{{ event.startDate }} - {{ event.endDate }}</p>
+            <div class="event-card__location" *ngIf="event.locationName || mapLink(event)">
+              <p *ngIf="event.locationName">{{ event.locationName }}</p>
+              <a *ngIf="mapLink(event) as mapUrl" [href]="mapUrl" target="_blank" rel="noopener">
+                View on Google Maps
+              </a>
+            </div>
           </div>
           <span class="status" [attr.data-status]="event.status">{{ event.status }}</span>
         </div>
@@ -130,7 +133,7 @@
           (click)="deleteEvent(event.eventId)"
           [disabled]="deletingEventId() === event.eventId"
         >
-          {{ deletingEventId() === event.eventId ? 'Deleting…' : 'Delete' }}
+          {{ deletingEventId() === event.eventId ? 'Deleting...' : 'Delete' }}
         </button>
         <div class="event-card__metrics">
           <div>
@@ -162,7 +165,7 @@
             (click)="sendInvitation(event.eventId)"
             [disabled]="inviteState()[event.eventId]?.loading"
           >
-            {{ inviteState()[event.eventId]?.loading ? 'Sending…' : 'Send invite' }}
+            {{ inviteState()[event.eventId]?.loading ? 'Sending...' : 'Send invite' }}
           </button>
         </div>
         <p class="invite-feedback success" *ngIf="inviteState()[event.eventId]?.success">
