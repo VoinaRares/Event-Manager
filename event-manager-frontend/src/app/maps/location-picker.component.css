@@ -1,0 +1,83 @@
+.location-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.field-label {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.field input {
+  border: 1px solid #cbd5f5;
+  border-radius: 0.6rem;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.95rem;
+}
+
+.hint {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.map-wrapper {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  position: relative;
+  min-height: 320px;
+}
+
+.map-wrapper google-map {
+  display: block;
+  height: 320px;
+}
+
+.map-placeholder {
+  display: grid;
+  place-items: center;
+  height: 320px;
+  color: #475569;
+  font-weight: 600;
+  background: linear-gradient(135deg, #f8fafc, #eef2ff);
+}
+
+.map-error {
+  padding: 1rem;
+  text-align: center;
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+.selection {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.pill {
+  background: #eef2ff;
+  color: #3730a3;
+  border-radius: 999px;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.selection button {
+  border: none;
+  background: #0f172a;
+  color: #fff;
+  border-radius: 0.6rem;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  font-weight: 600;
+}

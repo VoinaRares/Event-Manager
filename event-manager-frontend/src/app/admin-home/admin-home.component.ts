@@ -9,11 +9,15 @@ import {
 } from '../api/dashboard.service';
 import { Organizer, OrganizerService } from '../api/organizer.service';
 import { AdminEventPayload, AdminEventService } from '../api/admin-event.service';
+import {
+  LocationPickerComponent,
+  SelectedLocation
+} from '../maps/location-picker.component';
 
 @Component({
   selector: 'app-admin-home',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LocationPickerComponent],
   templateUrl: './admin-home.component.html',
   styleUrl: './admin-home.component.css'
 })
@@ -32,6 +36,7 @@ export class AdminHomeComponent implements OnInit {
   readonly createError = signal<string | null>(null);
   readonly deletingEventId = signal<number | null>(null);
   readonly inviteState = signal<Record<number, InviteState>>({});
+  readonly locationSelection = signal<SelectedLocation | null>(null);
 
   eventDraft = {
     name: '',
@@ -94,7 +99,13 @@ export class AdminHomeComponent implements OnInit {
       name: this.eventDraft.name.trim(),
       startDate: this.eventDraft.startDate,
       endDate: this.eventDraft.endDate,
-      locationName: this.eventDraft.locationName.trim() || null,
+      locationName:
+        this.eventDraft.locationName.trim() ||
+        this.locationSelection()?.displayName ||
+        null,
+      latitude: this.locationSelection()?.latitude ?? null,
+      longitude: this.locationSelection()?.longitude ?? null,
+      placeId: null,
       organizerIds: [organizerId, coHostId]
     };
 
@@ -160,6 +171,23 @@ export class AdminHomeComponent implements OnInit {
     });
   }
 
+  onLocationSelected(location: SelectedLocation): void {
+    this.locationSelection.set(location);
+    this.eventDraft.locationName = location.displayName;
+  }
+
+  onLocationCleared(): void {
+    this.locationSelection.set(null);
+  }
+
+  mapLink(event: AdminEventSummary): string | null {
+    if (event.latitude == null || event.longitude == null) {
+      return null;
+    }
+
+    return `https://www.google.com/maps/search/?api=1&query=${event.latitude},${event.longitude}`;
+  }
+
   private fetchDashboard(organizerId: number): void {
     this.loading.set(true);
     this.error.set(null);
@@ -185,6 +213,7 @@ export class AdminHomeComponent implements OnInit {
       locationName: '',
       coHostId: ''
     };
+    this.locationSelection.set(null);
   }
 
   private updateInviteState(eventId: number, state: Partial<InviteState>): void {
