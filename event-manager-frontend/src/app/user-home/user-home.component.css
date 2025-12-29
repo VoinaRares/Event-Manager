@@ -159,6 +159,21 @@
   color: #047857;
 }
 
+.map-block {
+  margin-top: 0.75rem;
+}
+
+.map-link {
+  display: inline-block;
+  margin-top: 0.4rem;
+  font-weight: 600;
+  color: #2563eb;
+}
+
+.map-link:hover {
+  text-decoration: underline;
+}
+
 .status-rejected {
   color: #c2410c;
 }

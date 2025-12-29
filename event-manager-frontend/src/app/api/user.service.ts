@@ -20,6 +20,9 @@ export interface UserInvitation {
   startDate: string;
   endDate: string;
   locationName: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  placeId: number | null;
 }
 
 export interface UserInvitationsResponse {
