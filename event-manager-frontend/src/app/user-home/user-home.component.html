@@ -35,6 +35,19 @@
             <span>{{ event.locationName || 'To be announced' }}</span>
           </p>
 
+          <div class="map-block" *ngIf="event.latitude != null && event.longitude != null">
+            <app-map-preview [latitude]="event.latitude" [longitude]="event.longitude"></app-map-preview>
+          </div>
+          <a
+            class="map-link"
+            *ngIf="mapLink(event) as link"
+            [href]="link"
+            target="_blank"
+            rel="noopener"
+          >
+            View on Google Maps
+          </a>
+
           <div class="actions">
             <button
               class="btn btn-outline"
@@ -79,6 +92,19 @@
             <span class="label">Location:</span>
             <span>{{ event.locationName || 'To be announced' }}</span>
           </p>
+
+          <div class="map-block" *ngIf="event.latitude != null && event.longitude != null">
+            <app-map-preview [latitude]="event.latitude" [longitude]="event.longitude"></app-map-preview>
+          </div>
+          <a
+            class="map-link"
+            *ngIf="mapLink(event) as link"
+            [href]="link"
+            target="_blank"
+            rel="noopener"
+          >
+            View on Google Maps
+          </a>
         </div>
       </section>
 
@@ -113,6 +139,19 @@
             <span class="label">Location:</span>
             <span>{{ event.locationName || 'To be announced' }}</span>
           </p>
+
+          <div class="map-block" *ngIf="event.latitude != null && event.longitude != null">
+            <app-map-preview [latitude]="event.latitude" [longitude]="event.longitude"></app-map-preview>
+          </div>
+          <a
+            class="map-link"
+            *ngIf="mapLink(event) as link"
+            [href]="link"
+            target="_blank"
+            rel="noopener"
+          >
+            View on Google Maps
+          </a>
 
           <p class="event-row status-row">
             <span class="label">Status:</span>

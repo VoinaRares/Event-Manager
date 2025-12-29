@@ -58,6 +58,9 @@ public class UserInvitationService {
         dto.setStartDate(participant.getEvent().getStartDate());
         dto.setEndDate(participant.getEvent().getEndDate());
         dto.setLocationName(participant.getEvent().getLocationName());
+        dto.setLatitude(participant.getEvent().getLatitude());
+        dto.setLongitude(participant.getEvent().getLongitude());
+        dto.setPlaceId(participant.getEvent().getPlaceId());
         return dto;
     }
 }

@@ -1,0 +1,9 @@
+<div class="map-preview" *ngIf="apiReady() && center; else fallback">
+  <google-map [center]="center" [zoom]="zoom" height="180px" width="100%">
+    <map-marker *ngIf="markerPosition" [position]="markerPosition"></map-marker>
+  </google-map>
+</div>
+
+<ng-template #fallback>
+  <div class="map-fallback">Location preview unavailable</div>
+</ng-template>

@@ -2,11 +2,12 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserService, UserInvitation } from '../api/user.service';
 import { SessionService } from '../session/session.service';
+import { MapPreviewComponent } from '../maps/map-preview.component';
 
 @Component({
   selector: 'app-user-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MapPreviewComponent],
   templateUrl: './user-home.component.html',
   styleUrls: ['./user-home.component.css']
 })
@@ -28,6 +29,18 @@ export class UserHomeComponent implements OnInit {
   );
 
   readonly userEmail = computed(() => this.session.session().email);
+
+  readonly mapLink = (invitation: UserInvitation): string | null => {
+    if (invitation.latitude != null && invitation.longitude != null) {
+      return `https://www.google.com/maps/search/?api=1&query=${invitation.latitude},${invitation.longitude}`;
+    }
+    if (invitation.locationName) {
+      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+        invitation.locationName
+      )}`;
+    }
+    return null;
+  };
 
   ngOnInit(): void {
     const userId = this.session.userId();
