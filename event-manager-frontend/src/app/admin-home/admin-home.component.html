@@ -7,14 +7,6 @@
       Monitoring {{ data.organizerName }} - {{ data.organizerEmail }}
     </p>
   </div>
-  <label class="organizer-select">
-    <span>Switch organizer</span>
-    <select [ngModel]="selectedOrganizerId()" (ngModelChange)="changeOrganizer($event)">
-      <option *ngFor="let organizer of organizers()" [value]="organizer.id">
-        {{ organizer.name }} ({{ organizer.email }})
-      </option>
-    </select>
-  </label>
 </header>
 
 <section class="create-event-card">

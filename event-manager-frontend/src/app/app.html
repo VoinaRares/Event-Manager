@@ -1,12 +1,16 @@
 <header class="app-header">
-  <div class="brand">Event Manager</div>
+  <a class="brand" [routerLink]="session.role() ? '/home' : '/'">Event Manager</a>
   <nav>
-    <a routerLink="/signup/organizer" routerLinkActive="active-link">Organizer signup</a>
-    <a routerLink="/signup/user" routerLinkActive="active-link">User signup</a>
-    <a routerLink="/login" routerLinkActive="active-link">Login</a>
-    <a *ngIf="session.role() === 'organizer'" routerLink="/admin" routerLinkActive="active-link">
-      Admin home
-    </a>
+    <ng-container *ngIf="!session.role()">
+      <a routerLink="/signup/organizer" routerLinkActive="active-link">Organizer signup</a>
+      <a routerLink="/signup/user" routerLinkActive="active-link">User signup</a>
+      <a routerLink="/login" routerLinkActive="active-link">Login</a>
+    </ng-container>
+
+    <ng-container *ngIf="session.role()">
+      <a *ngIf="session.role() === 'organizer'" routerLink="/admin" routerLinkActive="active-link">Admin home</a>
+      <button class="logout-button" (click)="logout()">Logout</button>
+    </ng-container>
   </nav>
 </header>
 

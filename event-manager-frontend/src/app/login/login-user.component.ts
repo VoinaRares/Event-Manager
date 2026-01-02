@@ -42,39 +42,34 @@ export class LoginComponent {
 
     const preferredRole = this.form.value.role! as 'organizer' | 'user';
     this.isSubmitting.set(true);
-    this.tryLogin(preferredRole, payload, true);
+    this.tryLogin(preferredRole, payload);
   }
 
-  private tryLogin(role: 'organizer' | 'user', payload: LoginPayload, allowFallback: boolean): void {
+  private tryLogin(role: 'organizer' | 'user', payload: LoginPayload): void {
     const service = role === 'organizer' ? this.organizerService : this.userService;
     service.login(payload).subscribe({
-        next: (response) => {
-          this.isSubmitting.set(false);
-          localStorage.setItem('access_token', response.accessToken);
-          localStorage.setItem('refresh_token', response.refreshToken);
-          this.sessionService.setSession({
-            role,
-            userId: response.id,
-            email: response.email
-          });
-          this.router.navigate(role === 'organizer' ? ['/admin'] : ['/home']);
-        },
-        error: (error) => {
-          if (error.status === 401 && allowFallback) {
-            const fallbackRole = role === 'organizer' ? 'user' : 'organizer';
-            this.tryLogin(fallbackRole, payload, false);
-            return;
-          }
-          this.isSubmitting.set(false);
-          if (error.status === 401) {
-            this.submissionError.set('Incorrect email or password.');
-          } else if (error.status === 0) {
-            this.submissionError.set('Unable to reach the server. Check that the backend is running.');
-          } else {
-            this.submissionError.set('Something went wrong. Please try again.');
-          }
+      next: (response) => {
+        this.isSubmitting.set(false);
+        localStorage.setItem('access_token', response.accessToken);
+        localStorage.setItem('refresh_token', response.refreshToken);
+        this.sessionService.setSession({
+          role,
+          userId: response.id,
+          email: response.email
+        });
+        this.router.navigate(role === 'organizer' ? ['/admin'] : ['/home']);
+      },
+      error: (error) => {
+        this.isSubmitting.set(false);
+        if (error.status === 401) {
+          this.submissionError.set('Incorrect email or password for the selected role. Please pick the correct role.');
+        } else if (error.status === 0) {
+          this.submissionError.set('Unable to reach the server.');
+        } else {
+          this.submissionError.set('Something went wrong. Please try again.');
         }
-      });
+      }
+    });
   }
 
   resetStatus(): void {

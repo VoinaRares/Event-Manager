@@ -13,19 +13,56 @@ header.app-header {
 .brand {
   font-size: 1.2rem;
   font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
 }
 
-nav a {
+.brand:hover,
+.brand:focus {
+  color: #fff;
+  text-decoration: none;
+}
+
+.brand:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.6);
+  outline-offset: 2px;
+}
+
+/* Base nav link styles so all links look consistent */
+nav a,
+.logout-button {
   color: #cbd5f5;
   margin-left: 1.25rem;
   text-decoration: none;
   font-weight: 500;
 }
 
+nav a:hover,
+.logout-button:hover {
+  color: #fff;
+}
+
+nav a:focus-visible,
+.logout-button:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.25);
+  outline-offset: 2px;
+}
+
 nav a.active-link {
   color: #fff;
 }
 
-.app-main {
-  padding: 1.5rem 0 3rem;
+.logout-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+
+  /* Inherit font sizing and spacing so the button visually matches anchor links */
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0;
+  display: inline;
+  vertical-align: middle;
 }

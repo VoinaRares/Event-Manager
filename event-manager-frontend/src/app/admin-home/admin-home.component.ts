@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { SessionService } from '../session/session.service';
 
 import {
   AdminEventSummary,
@@ -25,6 +26,7 @@ export class AdminHomeComponent implements OnInit {
   private readonly dashboardService = inject(DashboardService);
   private readonly organizerService = inject(OrganizerService);
   private readonly adminEventService = inject(AdminEventService);
+  private readonly session = inject(SessionService);
 
   readonly organizers = signal<Organizer[]>([]);
   readonly selectedOrganizerId = signal<number | null>(null);
@@ -53,6 +55,16 @@ export class AdminHomeComponent implements OnInit {
       next: (list) => {
         this.organizers.set(list);
         if (list.length) {
+          const role = this.session.role();
+          const currentUserId = this.session.userId();
+          if (role === 'organizer' && currentUserId) {
+            const found = list.find((o) => o.id === currentUserId);
+            if (found) {
+              this.changeOrganizer(found.id);
+              return;
+            }
+          }
+
           this.changeOrganizer(list[0].id);
         }
       },
