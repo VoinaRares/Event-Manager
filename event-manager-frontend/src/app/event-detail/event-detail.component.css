@@ -1,0 +1,23 @@
+.page { padding: 1.5rem; display:flex; justify-content:center; align-items:center; min-height:100vh; box-sizing:border-box; }
+.back { position: fixed; left: 16px; bottom: 16px; background: #ffffff; border: 1px solid #e5e7eb; padding: 8px 12px; border-radius: 8px; color: #374151; font-weight: 600; cursor: pointer; box-shadow: 0 6px 18px rgba(2,6,23,0.06); z-index: 50; }
+
+.section.detail-section { width: 100%; max-width: 900px; }
+
+.detail-card { background: #ffffff; border-radius: 12px; padding: 1.25rem; box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08); border: 1px solid #e6e6e6; }
+
+.event-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; color: #111827; }
+.event-row { display:flex; gap:0.5rem; color:#374151; margin: 0.2rem 0; }
+.label { font-weight: 700; color: #6b7280; min-width: 80px; }
+.map-link { color: #2563eb; font-weight: 700; }
+
+.participants { margin-top: 1rem; }
+.participants ul { list-style: none; padding-left: 0; }
+.participants li { padding: 0.45rem 0; border-bottom: 1px solid #f3f4f6; }
+.meta { color: #6b7280; margin-left: 8px; font-size: 0.95rem; }
+
+@media (max-width:640px) {
+  .page { padding: 1rem; }
+  .detail-card { padding: 1rem; }
+  .event-title { font-size: 1.25rem; }
+  .back { left: 8px; bottom: 8px; padding: 6px 8px; }
+}

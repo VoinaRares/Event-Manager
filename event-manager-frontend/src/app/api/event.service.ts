@@ -31,6 +31,10 @@ export class EventService {
     return this.http.get<EventDto[]>(this.baseUrl);
   }
 
+  getById(eventId: number): Observable<EventDto> {
+    return this.http.get<EventDto>(`${this.baseUrl}/${eventId}`);
+  }
+
   accept(eventId: number, token: string) {
     return this.http.post<void>(`${this.baseUrl}/${eventId}/accept/${token}`, {});
   }

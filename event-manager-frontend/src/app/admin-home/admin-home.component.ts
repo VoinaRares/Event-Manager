@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { SessionService } from '../session/session.service';
 
 import {
@@ -18,7 +19,7 @@ import {
 @Component({
   selector: 'app-admin-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, LocationPickerComponent],
+  imports: [CommonModule, FormsModule, RouterModule, LocationPickerComponent],
   templateUrl: './admin-home.component.html',
   styleUrl: './admin-home.component.css'
 })

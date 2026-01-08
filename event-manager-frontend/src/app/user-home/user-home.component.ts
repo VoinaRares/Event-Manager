@@ -1,5 +1,6 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { UserService, UserInvitation } from '../api/user.service';
 import { SessionService } from '../session/session.service';
 import { MapPreviewComponent } from '../maps/map-preview.component';
@@ -7,7 +8,7 @@ import { MapPreviewComponent } from '../maps/map-preview.component';
 @Component({
   selector: 'app-user-home',
   standalone: true,
-  imports: [CommonModule, MapPreviewComponent],
+  imports: [CommonModule, RouterModule, MapPreviewComponent],
   templateUrl: './user-home.component.html',
   styleUrls: ['./user-home.component.css']
 })

@@ -1,16 +1,9 @@
 package com.example.event_manager.controller;
 
-import com.example.event_manager.model.Event;
-import com.example.event_manager.model.Organizer;
-import com.example.event_manager.model.User;
-import com.example.event_manager.repository.EventRepository;
-import com.example.event_manager.repository.UserRepository;
-import com.example.event_manager.dto.EventCreateDto;
-import com.example.event_manager.dto.EventResponseDto;
-import com.example.event_manager.mapper.EventMapper;
-import com.example.event_manager.service.EventParticipantService;
-import com.example.event_manager.service.OrganizerService;
-import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,9 +13,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import com.example.event_manager.dto.EventCreateDto;
+import com.example.event_manager.dto.EventResponseDto;
+import com.example.event_manager.mapper.EventMapper;
+import com.example.event_manager.model.Event;
+import com.example.event_manager.model.Organizer;
+import com.example.event_manager.model.User;
+import com.example.event_manager.repository.EventRepository;
+import com.example.event_manager.repository.UserRepository;
+import com.example.event_manager.service.EventParticipantService;
+import com.example.event_manager.service.OrganizerService;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @RestController
 @RequestMapping("/api/events")
@@ -48,6 +50,13 @@ public class EventController {
     @GetMapping
     public List<EventResponseDto> getAllEvents() {
         return EventMapper.toDtoList(eventRepository.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EventResponseDto> getEventById(@PathVariable Long id) {
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Event not found with id: " + id));
+        return ResponseEntity.ok(EventMapper.toDto(event));
     }
 
     @PostMapping

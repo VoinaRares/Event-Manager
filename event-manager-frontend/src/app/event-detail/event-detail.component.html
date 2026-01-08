@@ -1,0 +1,40 @@
+<section class="page">
+  <button class="back" type="button" (click)="goBack()">← Back</button>
+
+  <section class="section detail-section">
+    <div *ngIf="loading" class="state">Loading event...</div>
+    <div *ngIf="error" class="state error">{{ error }}</div>
+
+    <article class="event-card detail-card" *ngIf="!loading && !error && event; else noEvent">
+      <h1 class="event-title">{{ event.name }}</h1>
+
+      <p class="event-row"><span class="label">Dates:</span> {{ event.startDate }} - {{ event.endDate }}</p>
+
+      <p class="event-row" *ngIf="event.locationName"><span class="label">Location:</span> {{ event.locationName }}</p>
+
+      <p class="event-row" *ngIf="event.latitude != null && event.longitude != null">
+        <span class="label">Map:</span>
+        <a class="map-link" [href]="mapLink(event)" target="_blank" rel="noopener">View on Google Maps</a>
+      </p>
+
+      <section class="participants">
+        <h2>Participants ({{ event.participants?.length || 0 }})</h2>
+        <ul *ngIf="event.participants?.length; else noParticipants">
+          <li *ngFor="let p of event.participants">
+            <strong>{{ p.userEmail || ('#' + p.userId) }}</strong>
+            <span class="meta"> - {{ p.responded ? (p.isComing ? 'Coming' : 'Not coming') : 'Pending' }}</span>
+          </li>
+        </ul>
+        <ng-template #noParticipants>
+          <p>No participants yet.</p>
+        </ng-template>
+      </section>
+    </article>
+  </section>
+
+  <ng-template #noEvent>
+    <section class="section">
+      <p>No event data was provided to this page.</p>
+    </section>
+  </ng-template>
+</section>

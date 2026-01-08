@@ -8,6 +8,7 @@ import { LoginComponent } from './login/login-user.component';
 import { organizerGuard } from './guards/organizer.guard';
 import { UserSignupComponent } from './user-signup/user-signup.component';
 import { SignupFromInviteComponent } from './signup-from-invite/signup-from-invite.component';
+import { EventDetailComponent } from './event-detail/event-detail.component';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'signup/organizer' },
@@ -19,6 +20,8 @@ export const routes: Routes = [
   { path: 'user-home', component: UserHomeComponent },
   { path: 'home', component: UserHomeComponent },
   { path: 'admin', component: AdminHomeComponent, canActivate: [organizerGuard] },
+  { path: 'event', component: EventDetailComponent },
+  { path: 'event/:eventId', component: EventDetailComponent },
   { path: 'login', component: LoginComponent},
   { path: '**', redirectTo: 'signup/organizer' }
 ];
