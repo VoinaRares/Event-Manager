@@ -13,6 +13,7 @@ public class EventResponseDto {
     private String locationName;
     private List<OrganizerResponseDto> organizers;
     private List<EventParticipantDto> participants;
+    private List<ImageResponseDto> images;
 
     public EventResponseDto() {}
 
@@ -45,4 +46,7 @@ public class EventResponseDto {
 
     public List<EventParticipantDto> getParticipants() { return participants; }
     public void setParticipants(List<EventParticipantDto> participants) { this.participants = participants; }
+
+    public List<ImageResponseDto> getImages() { return images; }
+    public void setImages(List<ImageResponseDto> images) { this.images = images; }
 }

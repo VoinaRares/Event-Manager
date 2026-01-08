@@ -1,8 +1,9 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EventDto } from '../domain/EventDto';
 import { EventService } from '../api/event.service';
+import { ImageService } from '../api/image.service';
 
 @Component({
   selector: 'app-event-detail',
@@ -16,9 +17,11 @@ export class EventDetailComponent implements OnInit {
   private readonly location = inject(Location);
   private readonly route = inject(ActivatedRoute);
   private readonly eventService = inject(EventService);
+  private readonly imageService = inject(ImageService);
 
   loading = false;
   error: string | null = null;
+  readonly uploading = signal(false);
 
   ngOnInit(): void {
     const paramId = this.route.snapshot.paramMap.get('eventId');
@@ -65,5 +68,23 @@ export class EventDetailComponent implements OnInit {
   mapLink(e: EventDto | null): string | null {
     if (!e || e.latitude == null || e.longitude == null) return null;
     return `https://www.google.com/maps/search/?api=1&query=${e.latitude},${e.longitude}`;
+  }
+
+  onFileSelected(files: FileList | null): void {
+    if (!files || !files.length) return;
+    const file = files.item(0);
+    if (!file || !this.event) return;
+    if (!this.event.id) return;
+
+    this.uploading.set(true);
+    this.imageService.upload(this.event.id, file).subscribe({
+      next: () => {
+        this.uploading.set(false);
+        this.fetchEvent(this.event!.id!);
+      },
+      error: () => {
+        this.uploading.set(false);
+      }
+    });
   }
 }

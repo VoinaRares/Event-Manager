@@ -29,6 +29,25 @@
           <p>No participants yet.</p>
         </ng-template>
       </section>
+
+      <section class="photos">
+        <h2>Photos ({{ event.images?.length || 0 }})</h2>
+        <div class="photos-grid">
+          <div class="photo-tile add" [class.disabled]="uploading()" (click)="!uploading() && fileInput.click()">
+            <ng-container *ngIf="uploading(); else plusTpl">
+              <div class="uploading">Uploading…</div>
+            </ng-container>
+            <ng-template #plusTpl>
+              <div class="plus">+</div>
+            </ng-template>
+            <input #fileInput type="file" accept="image/*" (change)="onFileSelected($event.target.files)" hidden />
+          </div>
+
+          <div class="photo-tile" *ngFor="let img of event.images">
+            <img [src]="img.url" alt="Event photo" />
+          </div>
+        </div>
+      </section>
     </article>
   </section>
 

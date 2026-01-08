@@ -1,4 +1,5 @@
 import { EventParticipant } from "./EventParticipant";
+import { ImageDto } from "./ImageDto";
 
 export interface EventDto {
   id: number;
@@ -9,4 +10,5 @@ export interface EventDto {
   latitude?: number | null;
   locationName?: string | null;
   participants?: EventParticipant[];
+  images?: ImageDto[];
 }

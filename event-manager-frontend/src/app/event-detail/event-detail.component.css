@@ -15,6 +15,19 @@
 .participants li { padding: 0.45rem 0; border-bottom: 1px solid #f3f4f6; }
 .meta { color: #6b7280; margin-left: 8px; font-size: 0.95rem; }
 
+.photos { margin-top: 16px; }
+.photos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; margin-top: 8px; }
+.photo-tile { width: 120px; height: 120px; border-radius: 8px; overflow: hidden; background: #f9fafb; border: 1px solid #e5e7eb; display:flex; align-items:center; justify-content:center; }
+.photo-tile img { width: 100%; height: 100%; object-fit: cover; }
+.photo-tile.add { cursor: pointer; display:flex; align-items:center; justify-content:center; }
+.photo-tile.add.disabled { opacity: 0.6; cursor: default; pointer-events: none; }
+.photo-tile .plus { font-size: 2rem; color: #374151; font-weight: 700; }
+.photo-tile .uploading { font-size: 0.9rem; color: #374151; font-weight: 600; }
+
+@media (max-width:640px) {
+  .photos-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); }
+  .photo-tile { width: 90px; height: 90px; }
+}
 @media (max-width:640px) {
   .page { padding: 1rem; }
   .detail-card { padding: 1rem; }
