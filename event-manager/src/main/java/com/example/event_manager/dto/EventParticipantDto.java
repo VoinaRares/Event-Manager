@@ -2,11 +2,15 @@ package com.example.event_manager.dto;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class EventParticipantDto {
     private Long eventId;
     private Integer userId;
     private String userEmail;
+    @JsonProperty("isComing")
     private boolean isComing;
+    @JsonProperty("responded")
     private boolean responded;
     private LocalDateTime invitationSentAt;
     private LocalDateTime responseAt;

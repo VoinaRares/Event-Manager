@@ -1,9 +1,10 @@
 package com.example.event_manager.mapper;
 
-import com.example.event_manager.dto.EventResponseDto;
-import com.example.event_manager.model.Event;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.example.event_manager.dto.EventResponseDto;
+import com.example.event_manager.model.Event;
 
 public class EventMapper {
     public static EventResponseDto toDto(Event e) {
@@ -27,6 +28,16 @@ public class EventMapper {
             dto.setParticipants(e.getParticipants().stream()
                     .map(EventParticipantMapper::toDto)
                     .collect(Collectors.toList()));
+        }
+
+        if (e.getPhotos() != null) {
+            dto.setImages(e.getPhotos().stream().map(image -> {
+                com.example.event_manager.dto.ImageResponseDto idto = new com.example.event_manager.dto.ImageResponseDto();
+                idto.setId(image.getId());
+                idto.setUrl(image.getUrl());
+                idto.setPlaceholder(image.getPlaceholder());
+                return idto;
+            }).collect(Collectors.toList()));
         }
 
         return dto;

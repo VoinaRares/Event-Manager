@@ -1,0 +1,71 @@
+<section class="page">
+  <button class="back" type="button" (click)="goBack()">← Back</button>
+
+  <section class="section detail-section">
+    <div *ngIf="loading" class="state">Loading event...</div>
+    <div *ngIf="error" class="state error">{{ error }}</div>
+
+    <article class="event-card detail-card" *ngIf="!loading && !error && event; else noEvent">
+      <h1 class="event-title">{{ event.name }}</h1>
+
+      <p class="event-row"><span class="label">Dates:</span> {{ event.startDate }} - {{ event.endDate }}</p>
+
+      <p class="event-row" *ngIf="event.locationName"><span class="label">Location:</span> {{ event.locationName }}</p>
+
+      <p class="event-row" *ngIf="event.latitude != null && event.longitude != null">
+        <span class="label">Map:</span>
+        <a class="map-link" [href]="mapLink(event)" target="_blank" rel="noopener">View on Google Maps</a>
+      </p>
+
+      <section class="participants">
+        <h2>Participants ({{ event.participants?.length || 0 }})</h2>
+        <ul *ngIf="event.participants?.length; else noParticipants">
+          <li *ngFor="let p of event.participants">
+            <strong>{{ p.userEmail || ('#' + p.userId) }}</strong>
+            <span class="meta"> - {{ p.responded ? (p.isComing ? 'Coming' : 'Not coming') : 'Pending' }}</span>
+          </li>
+        </ul>
+        <ng-template #noParticipants>
+          <p>No participants yet.</p>
+        </ng-template>
+      </section>
+
+      <section class="photos">
+        <h2>Photos ({{ event.images?.length || 0 }})</h2>
+        <div class="photos-grid">
+          <div class="photo-tile add" [class.disabled]="uploading()" (click)="!uploading() && fileInput.click()">
+            <ng-container *ngIf="uploading(); else plusTpl">
+              <div class="uploading">Uploading…</div>
+            </ng-container>
+            <ng-template #plusTpl>
+              <div class="plus">+</div>
+            </ng-template>
+            <input #fileInput type="file" accept="image/*" (change)="onFileSelected($event.target.files)" hidden />
+          </div>
+
+          <div class="photo-tile" *ngFor="let img of event.images; let i = index">
+            <img [src]="img.url" alt="Event photo" (click)="openViewer(i)" />
+          </div>
+        </div>
+
+        <div class="lightbox" *ngIf="viewerOpen && event?.images?.length" (click)="closeViewer()">
+          <div class="lightbox-inner" (click)="$event.stopPropagation()">
+            <button class="close" type="button" (click)="closeViewer()">✕</button>
+            <button class="nav prev" type="button" (click)="$event.stopPropagation(); prev()">‹</button>
+            <img class="lightbox-img" [src]="event?.images?.[selectedIndex]?.url" alt="Photo" (click)="$event.stopPropagation()" />
+            <button class="nav next" type="button" (click)="$event.stopPropagation(); next()">›</button>
+            <div class="lightbox-actions">
+              <button class="open-original" type="button" (click)="$event.stopPropagation(); openOriginal($event)">Open original</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </article>
+  </section>
+
+  <ng-template #noEvent>
+    <section class="section">
+      <p>No event data was provided to this page.</p>
+    </section>
+  </ng-template>
+</section>
