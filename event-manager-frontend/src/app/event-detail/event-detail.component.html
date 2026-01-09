@@ -43,8 +43,20 @@
             <input #fileInput type="file" accept="image/*" (change)="onFileSelected($event.target.files)" hidden />
           </div>
 
-          <div class="photo-tile" *ngFor="let img of event.images">
-            <img [src]="img.url" alt="Event photo" />
+          <div class="photo-tile" *ngFor="let img of event.images; let i = index">
+            <img [src]="img.url" alt="Event photo" (click)="openViewer(i)" />
+          </div>
+        </div>
+
+        <div class="lightbox" *ngIf="viewerOpen && event?.images?.length" (click)="closeViewer()">
+          <div class="lightbox-inner" (click)="$event.stopPropagation()">
+            <button class="close" type="button" (click)="closeViewer()">✕</button>
+            <button class="nav prev" type="button" (click)="$event.stopPropagation(); prev()">‹</button>
+            <img class="lightbox-img" [src]="event?.images?.[selectedIndex]?.url" alt="Photo" (click)="$event.stopPropagation()" />
+            <button class="nav next" type="button" (click)="$event.stopPropagation(); next()">›</button>
+            <div class="lightbox-actions">
+              <button class="open-original" type="button" (click)="$event.stopPropagation(); openOriginal($event)">Open original</button>
+            </div>
           </div>
         </div>
       </section>

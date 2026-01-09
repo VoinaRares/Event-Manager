@@ -34,3 +34,21 @@
   .event-title { font-size: 1.25rem; }
   .back { left: 8px; bottom: 8px; padding: 6px 8px; }
 }
+
+/* Lightbox styles */
+.lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display:flex; align-items:center; justify-content:center; z-index: 200; }
+.lightbox-inner { position: relative; max-width: 90%; max-height: 90%; display:flex; align-items:center; justify-content:center; }
+.lightbox-img { max-width: 100%; max-height: 100%; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.lightbox .close { position: absolute; top: -12px; right: -12px; background: #fff; border-radius: 50%; width: 36px; height: 36px; border: none; font-size: 1.1rem; cursor: pointer; }
+.lightbox .nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.9); border: none; width: 44px; height: 44px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; }
+.lightbox .nav.prev { left: -60px; }
+.lightbox .nav.next { right: -60px; }
+.lightbox-actions { position: absolute; bottom: -44px; left: 50%; transform: translateX(-50%); }
+.lightbox-actions .open-original { background: #fff; border: 1px solid #e6e6e6; padding: 6px 10px; border-radius: 8px; cursor: pointer; }
+
+@media (max-width:640px) {
+  .lightbox .nav.prev { left: 8px; }
+  .lightbox .nav.next { right: 8px; }
+  .lightbox .close { top: 8px; right: 8px; }
+  .lightbox-actions { bottom: 8px; }
+}

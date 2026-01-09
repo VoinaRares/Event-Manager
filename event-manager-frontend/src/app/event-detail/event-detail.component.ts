@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, Input, OnInit, inject, signal } from '@angular/core';
+import { Component, Input, OnInit, inject, signal, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EventDto } from '../domain/EventDto';
 import { EventService } from '../api/event.service';
@@ -86,5 +86,45 @@ export class EventDetailComponent implements OnInit {
         this.uploading.set(false);
       }
     });
+  }
+
+  // -- Lightbox viewer state & controls -------------------------------------------------
+  viewerOpen = false;
+  selectedIndex = 0;
+
+  openViewer(index: number) {
+    if (!this.event?.images || !this.event.images.length) return;
+    this.selectedIndex = index;
+    this.viewerOpen = true;
+  }
+
+  closeViewer() {
+    this.viewerOpen = false;
+  }
+
+  prev() {
+    if (!this.event?.images || !this.event.images.length) return;
+    const len = this.event.images.length;
+    this.selectedIndex = (this.selectedIndex - 1 + len) % len;
+  }
+
+  next() {
+    if (!this.event?.images || !this.event.images.length) return;
+    const len = this.event.images.length;
+    this.selectedIndex = (this.selectedIndex + 1) % len;
+  }
+
+  openOriginal(event?: Event) {
+    event?.stopPropagation();
+    const url = this.event?.images?.[this.selectedIndex]?.url;
+    if (url) window.open(url, '_blank');
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  handleKeyDown(event: KeyboardEvent) {
+    if (!this.viewerOpen) return;
+    if (event.key === 'Escape') this.closeViewer();
+    if (event.key === 'ArrowLeft') this.prev();
+    if (event.key === 'ArrowRight') this.next();
   }
 }
